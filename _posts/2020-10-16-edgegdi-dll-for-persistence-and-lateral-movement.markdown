@@ -28,7 +28,7 @@ The only solution is to prevent csrss from loading the unsigned DLL. I called my
 ![Figure 4 - Discretionary Access Control List to for EdgeGdi.dll](/assets/img/edgegdi-dll-for-persistence-and-lateral-movement/dacl.png)
 _Figure 4 - Discretionary Access Control List to for EdgeGdi.dll_
 
-The caveat now being that EdgeGdi.dll cannot be loaded by a SYSTEM process, but it WILL be loaded by processes running with NETWORK SERVICE privileges, which can be trivially escalated to SYSTEM privileges using one of the potato methods, see [Game Over Privileges]( __GHOST_URL__ /game-over-privileges/) for more details.
+The caveat now being that EdgeGdi.dll cannot be loaded by a SYSTEM process, but it WILL be loaded by processes running with NETWORK SERVICE privileges, which can be trivially escalated to SYSTEM privileges using one of the potato methods, see the Game Over Privileges blog post for more details.
 
 Now EdgeGdi.dll can be used for stealthy, stable persistence, or stealthy lateral movement by dropping it into System32 on another machine as described [here](https://www.mdsec.co.uk/2020/10/i-live-to-move-it-windows-lateral-movement-part-3-dll-hijacking/).
 

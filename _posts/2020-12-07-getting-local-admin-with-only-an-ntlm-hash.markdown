@@ -1,7 +1,8 @@
 ---
 layout: post
 title: Getting Local Admin with only an NTLM Hash
-date: '2020-12-07 13:32:00'
+date: '2020-12-07 00:00:00'
+img_path: /assets/img/2020-12-07/
 categories: ['Red Team', Windows]
 tags: []
 ---
@@ -14,12 +15,12 @@ The PTH technique _could_ work from a remote system to the compromised device, d
 
 I then realised, the Windows change password functionality only requires knowing the users NTLM hash. I used Mimikatz to update the password of the administrative account.
 
-![lsadump::changentlm to update the administrative account password](/assets/img/getting-local-admin-with-only-an-ntlm-hash/change_password2.png)
+![lsadump::changentlm to update the administrative account password](change_password2.png)
 _lsadump::changentlm to update the administrative account password_
 
 I then used runas to execute PowerShell as the admin user.
 
-![runas to execute a program with administrative privileges](/assets/img/getting-local-admin-with-only-an-ntlm-hash/admin2.png)
+![runas to execute a program with administrative privileges](admin2.png)
 _runas to execute a program with administrative privileges_
 
 A UAC bypass would be required to further escalate privileges past the filtered admin token but I consider that out of scope for the question. In conclusion, if an unprivileged user finds an administrative NTLM hash, they can compromise the account fairly easily.

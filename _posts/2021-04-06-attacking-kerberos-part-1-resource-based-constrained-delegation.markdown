@@ -56,12 +56,12 @@ If Rubeus does not choose a Domain Controller running at least **Windows Server 
 ![Rubeus s4u action using the aes256 hash](image.png)
 _Rubeus s4u action using the aes256 hash_
 
-Lateral movement can now be performed using a number of techniques. We can perform [DLL hijacking](/posts/2020-10-16-edgegdi-dll-for-persistence-and-lateral-movement) using SMB access, execute commands with WMI, setup remote scheduled tasks, etc. The below example copies an MSBuild payload onto HEADHUNTER and executes it using WMI. Note the usage of the fully qualified domain name (FQDN) is **VERY IMPORTANT**.
+Lateral movement can now be performed using a number of techniques. We can perform [DLL hijacking](/posts/edgegdi-dll-for-persistence-and-lateral-movement) using SMB access, execute commands with WMI, setup remote scheduled tasks, etc. The below example copies an MSBuild payload onto HEADHUNTER and executes it using WMI. Note the usage of the fully qualified domain name (FQDN) is **VERY IMPORTANT**.
 
 ![Lateral movement with WMI](image-6.png)
 _Lateral movement with WMI_
 
-[Part 2](/posts/kerberos-part-2-constrained-delegation-to-domain-admin/) will continue from HEADHUNTER and demonstrate obtaining Domain Admin privileges using Unconstrained Delegation and the printer bug.
+[Part 2](/posts/attacking-kerberos-part-2-unconstrained-delegation/) will continue from HEADHUNTER and demonstrate obtaining Domain Admin privileges using Unconstrained Delegation and the printer bug.
 
 ## References
 

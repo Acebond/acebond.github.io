@@ -11,7 +11,7 @@ I wanted to bypass Event Tracing for Windows (ETW) without any memory patching o
 ![ProcessHacker shows loaded .Net assemblies](bad.png)
 
 The current public methods of breaking ETW all patch functions in memory. They do something like this:
-```cpp
+```c++
 BOOL patchETW(BOOL revertETW) {
 #ifdef _M_AMD64
     const SIZE_T patchSize = 1;
@@ -45,7 +45,7 @@ There are approaches that take advantage of hardware breakpoints to redirect exe
 There is a solution, that’s easy to implement and very effective at the time of writing. The [EventRegister](https://learn.microsoft.com/en-us/windows/win32/api/evntprov/nf-evntprov-eventregister) function:
 > Registers an ETW event provider, creating a handle that can be used to write ETW events.
 
-This is the function used by software to create an ETW provider which can then be used to sent ETW events. The CLR (which is clr.dll at its core) calls the `EventRegister()` when being loaded to be able to provide the telemetry to EDRs or consumers like ProcessHacker.
+This is the function used by software to create an ETW provider which can then be used to send ETW events. The CLR (which is clr.dll at its core) calls the `EventRegister()` when being loaded to be able to provide the telemetry to EDRs or consumers like ProcessHacker.
 
 An important note on `EventRegister` is that programs should ignore the return value, and just continue working: 
 > Most production code should continue to run even if an ETW provider failed to register, so release builds should usually ignore the error code returned by `EventRegister`.
@@ -53,7 +53,7 @@ An important note on `EventRegister` is that programs should ignore the return v
 So, my question is, how many ETW event providers can the system/process have? Well, it turns out that a process can have at most [2048](https://www.geoffchappell.com/studies/windows/win32/ntdll/api/etw/evntsup/reghandle.htm). So, if a malicious program calls `EventRegister` 2048 times, or better yet, until an error occures, before loading the CLR, there cannot be any further event providers in the process.
 
 My proof-of-concept code is below which demonstrates spamming the `EventRegister` function to fill the kernel mode red-black tree thus preventing further ETW providers for registering.
-```cpp
+```c++
 void breakETW_Forever() {
     DWORD status = ERROR_SUCCESS;
     REGHANDLE RegistrationHandle = NULL;

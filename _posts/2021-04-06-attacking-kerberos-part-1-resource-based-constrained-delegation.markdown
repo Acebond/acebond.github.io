@@ -1,6 +1,6 @@
 ---
 layout: post
-title: 'Kerberos Resource-Based Constrained Delegation'
+title: 'Kerberos Abuse Part 1 - Resource-Based Constrained Delegation'
 date: '2021-04-06 00:00:00'
 img_path: /assets/img/2021-04-06/
 categories: ['Red Team', 'Active Directory']
@@ -56,7 +56,7 @@ If Rubeus does not choose a Domain Controller running at least **Windows Server 
 ![Rubeus s4u action using the aes256 hash](image.png)
 _Rubeus s4u action using the aes256 hash_
 
-Lateral movement can now be performed using a number of techniques. We can perform [DLL hijacking]( __GHOST_URL__ /edgegdi-dll-for-persistence-and-lateral-movement/) using SMB access, execute commands with WMI, setup remote scheduled tasks, etc. The below example copies an MSBuild payload onto HEADHUNTER and executes it using WMI. Note the usage of the fully qualified domain name (FQDN) is **VERY IMPORTANT**.
+Lateral movement can now be performed using a number of techniques. We can perform [DLL hijacking](/posts/2020-10-16-edgegdi-dll-for-persistence-and-lateral-movement) using SMB access, execute commands with WMI, setup remote scheduled tasks, etc. The below example copies an MSBuild payload onto HEADHUNTER and executes it using WMI. Note the usage of the fully qualified domain name (FQDN) is **VERY IMPORTANT**.
 
 ![Lateral movement with WMI](image-6.png)
 _Lateral movement with WMI_

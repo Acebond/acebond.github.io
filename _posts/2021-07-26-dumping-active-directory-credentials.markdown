@@ -50,10 +50,10 @@ Since the LSASS has an open handle to the file, an attacker can manipulate the L
 
 Mimikatz can inject or patch the LSASS process and leverage it's functionality to dump the credential material stored within ntds.dit. The [mimikatz-deep-dive-on-lsadumplsa-patch-and-inject](https://blog.3or.de/mimikatz-deep-dive-on-lsadumplsa-patch-and-inject.html) blog post explains this really well. TLDR: The `/patch` method should be considered more OPSEC safe. The `/inject` method will create a new thread inside LSASS.
 
-![lsadump::lsa /patch (optionally /name:KRBTGT to print for a specific user)](/assets/img/dumping-active-directory-credentials/image-3.png)
+![lsadump::lsa /patch (optionally /name:KRBTGT to print for a specific user)](image-3.png)
 _lsadump::lsa /patch (optionally /name:KRBTGT to print for a specific user)_
 
-![lsadump::lsa /inject /name:KRBTGT (omitting the name will print the information for all users)](/assets/img/dumping-active-directory-credentials/image-4.png)
+![lsadump::lsa /inject /name:KRBTGT (omitting the name will print the information for all users)](image-4.png)
 _lsadump::lsa /inject /name:KRBTGT (omitting the name will print the information for all users)_
 
 Other tools such as Meterpreter hashdump use similar techniques to dump the credential material by injecting into LSASS. This approach is the most detectable as any anomalous manipulation of the LSASS process, which is heavily monitored by EDR, should be considered a critical alert.

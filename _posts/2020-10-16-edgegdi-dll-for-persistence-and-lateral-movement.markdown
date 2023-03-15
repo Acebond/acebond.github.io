@@ -24,7 +24,7 @@ The csrss (Windows subsystem) process is marked signature restricted (Microsoft 
 ![Figure 3 - CSRSS process mitigation policies](processhacker.png)
 _Figure 3 - CSRSS process mitigation policies_
 
-The only solution is to prevent csrss from loading the unsigned DLL. I called my friend [@\_smashery\_](https://twitter.com/_smashery_) to help and our solution was to configure an Access Control Entry (ACE) to deny SYSTEM access to the EdgeGdi.dll (see Figure 4), which prevents csrss from loading the unsigned DLL, which prevents the system crash.
+The only solution is to prevent csrss from loading the unsigned DLL by configuring an Access Control Entry (ACE) to deny SYSTEM access to the EdgeGdi.dll (see Figure 4), which prevents csrss from loading the unsigned DLL, which prevents the system crash.
 
 ![Figure 4 - Discretionary Access Control List to for EdgeGdi.dll](dacl.png)
 _Figure 4 - Discretionary Access Control List to for EdgeGdi.dll_

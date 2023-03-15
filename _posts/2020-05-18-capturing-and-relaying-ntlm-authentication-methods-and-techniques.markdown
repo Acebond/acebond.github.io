@@ -2,6 +2,7 @@
 layout: post
 title: 'Capturing and Relaying NTLM Authentication: Methods and Techniques'
 date: '2020-05-18 00:00:00'
+img_path: /assets/img/2020-05-18/
 categories: ['Red Team', Windows]
 tags: []
 ---

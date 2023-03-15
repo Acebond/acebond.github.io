@@ -1,6 +1,6 @@
 ---
 layout: post
-title: 'Kerberos Unconstrained Delegation'
+title: 'Kerberos Abuse Part 2 - Unconstrained Delegation'
 date: '2021-04-07 00:00:00'
 img_path: /assets/img/2021-04-07/
 categories: ['Red Team', 'Active Directory']

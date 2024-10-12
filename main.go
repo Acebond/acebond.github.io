@@ -6,22 +6,23 @@ import (
 	"io"
 	"log"
 	"os"
+	"path/filepath"
+	"strings"
 
 	"github.com/yuin/goldmark"
 	highlighting "github.com/yuin/goldmark-highlighting/v2"
 )
 
-func main() {
+func GenerateBlogPage(file *os.File, path string) error {
 
-	file, err := os.Open("2024-10-10-whoops-i-dropped-my-system-thread-handle.markdown")
-	if err != nil {
-		log.Fatalf("failed to open markdown file: %v", err)
-	}
-	defer file.Close()
+	saveDir := "./site/"
+	fileName := filepath.Base(path)
+	fileName = strings.TrimSuffix(fileName, filepath.Ext(fileName))
+	fileName = fileName + ".html"
 
 	content, err := io.ReadAll(file)
 	if err != nil {
-		log.Fatalf("failed to read markdown file: %v", err)
+		return err
 	}
 
 	md := goldmark.New(
@@ -32,30 +33,55 @@ func main() {
 		),
 	)
 
-	htmlFile, err := os.Create("output.html")
+	htmlFile, err := os.Create(filepath.Join(saveDir, fileName))
 	if err != nil {
-		log.Fatalf("failed to create html file: %v", err)
+		return err
 	}
 	defer htmlFile.Close()
 
 	var htmlOutput bytes.Buffer
 	err = md.Convert(content, &htmlOutput)
 	if err != nil {
-		log.Fatalf("failed to convert markdown to HTML: %v", err)
+		return err
 	}
 
 	tpl, err := template.ParseFiles("post.html")
 	if err != nil {
-		log.Fatalf("Error parsing template: %v", err)
+		return err
 	}
 
 	err = tpl.Execute(htmlFile, template.HTML(htmlOutput.String()))
 	if err != nil {
-		log.Fatalf("Error executeing template: %v", err)
+		return err
 	}
 
-	//err = md.Convert(content, htmlFile)
-	//if err != nil {
-	//	log.Fatalf("failed to convert markdown to HTML: %v", err)
-	//}
+	return nil
+}
+
+func main() {
+
+	postsDir := "./posts/"
+
+	err := filepath.Walk(postsDir, func(path string, info os.FileInfo, err error) error {
+		if err != nil {
+			return err
+		}
+
+		if info.IsDir() {
+			return nil
+		}
+
+		file, err := os.Open(path)
+		if err != nil {
+			return err
+		}
+		defer file.Close()
+
+		return GenerateBlogPage(file, path)
+	})
+
+	if err != nil {
+		log.Println(err)
+	}
+
 }

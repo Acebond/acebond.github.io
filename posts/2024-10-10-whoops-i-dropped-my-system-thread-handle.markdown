@@ -1,7 +1,5 @@
 # Whoops… I dropped my SYSTEM thread HANDLE
 
-- [test](/test/test.html)
-
 I recently came across an interesting finding from [PrivescCheck](https://github.com/itm4n/PrivescCheck), the tool reported an exploitable leaked thread handle. This is when a privileged process leaks a handle (in this case a thread handle) into an unprivileged process, effectively allowing the unprivileged user to gain access to the privileged handle. These must be manually investigated and while mine was unfortunately a false positive, I still wanted to understand how one would exploit this vulnerability.
 
 ## Recreating the Vulnerability

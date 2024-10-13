@@ -31,8 +31,8 @@ I based my PoC heavily on <https://github.com/fern89/ghostwriting-2>. This was a
 The ROP requires 3 gadgets:
 
 1. A `ret` gadget. This pops an address off the stack and jumps to that address. We use it to execute function after setting up the parameters.
-2. A `jmp $ gadget`. This jumps backward by 2 bytes and causes `rip` to jump back to itself, creating an infinite loop. We use it to stop the thread from executing past our push gadget and into the unknown.
-3. A `push rdx; call rax gadget`. This will push `rdx` onto the stack, a value we control, and then be used to call `rax` which will hold the address of our `jmp $` infinite loop gadget. We use it to push data to the stack, and effectively halt the thread from doing anything meaningful.
+2. A `jmp $` gadget. This jumps backward by 2 bytes and causes `rip` to jump back to itself, creating an infinite loop. We use it to stop the thread from executing past our push gadget and into the unknown.
+3. A `push rdx; call rax` gadget. This will push `rdx` onto the stack, a value we control, and then be used to call `rax` which will hold the address of our `jmp $` infinite loop gadget. We use it to push data to the stack, and effectively halt the thread from doing anything meaningful.
 
 The 3rd gadget could be anything like:
 

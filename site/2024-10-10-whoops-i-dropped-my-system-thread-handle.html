@@ -29,8 +29,8 @@
 <p>The ROP requires 3 gadgets:</p>
 <ol>
 <li>A <code>ret</code> gadget. This pops an address off the stack and jumps to that address. We use it to execute function after setting up the parameters.</li>
-<li>A <code>jmp $ gadget</code>. This jumps backward by 2 bytes and causes <code>rip</code> to jump back to itself, creating an infinite loop. We use it to stop the thread from executing past our push gadget and into the unknown.</li>
-<li>A <code>push rdx; call rax gadget</code>. This will push <code>rdx</code> onto the stack, a value we control, and then be used to call <code>rax</code> which will hold the address of our <code>jmp $</code> infinite loop gadget. We use it to push data to the stack, and effectively halt the thread from doing anything meaningful.</li>
+<li>A <code>jmp $</code> gadget. This jumps backward by 2 bytes and causes <code>rip</code> to jump back to itself, creating an infinite loop. We use it to stop the thread from executing past our push gadget and into the unknown.</li>
+<li>A <code>push rdx; call rax</code> gadget. This will push <code>rdx</code> onto the stack, a value we control, and then be used to call <code>rax</code> which will hold the address of our <code>jmp $</code> infinite loop gadget. We use it to push data to the stack, and effectively halt the thread from doing anything meaningful.</li>
 </ol>
 <p>The 3rd gadget could be anything like:</p>
 <pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;"><code><span style="display:flex;"><span>push reg1; call reg2

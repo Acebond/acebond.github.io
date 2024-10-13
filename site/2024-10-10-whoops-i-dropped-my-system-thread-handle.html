@@ -4,18 +4,12 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <script src="https://cdn.tailwindcss.com?plugins=typography"></script>
-  <style>
-
-  </style>
   <title>Blog</title>
 </head>
 <body class="my-12">
   <div class="container mx-auto">
     <article class="prose lg:prose-xl max-w-none">
         <h1>Whoops… I dropped my SYSTEM thread HANDLE</h1>
-<ul>
-<li><a href="/test/test.html">test</a></li>
-</ul>
 <p>I recently came across an interesting finding from <a href="https://github.com/itm4n/PrivescCheck">PrivescCheck</a>, the tool reported an exploitable leaked thread handle. This is when a privileged process leaks a handle (in this case a thread handle) into an unprivileged process, effectively allowing the unprivileged user to gain access to the privileged handle. These must be manually investigated and while mine was unfortunately a false positive, I still wanted to understand how one would exploit this vulnerability.</p>
 <h2>Recreating the Vulnerability</h2>
 <p>You might be wondering how this happens? Well if you look at the <a href="https://learn.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-createprocessa">CreateProcessA</a> documentation, you will see:</p>

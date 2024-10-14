@@ -11,12 +11,12 @@
 </head>
 <body>
   <div class="container mx-auto">
-    <nav class="my-10">
+    <nav class="max-w-screen-lg my-10 mx-auto">
       <strong>
         <a href="/index.html">HOME</a>
       </strong>
     </nav>
-    <article class="prose lg:prose-xl max-w-none my-10">
+    <article class="prose lg:prose-xl max-w-screen-lg my-10 mx-auto">
       <h1>A Novel Method for Bypassing ETW</h1>
       <p>I wanted to bypass Event Tracing for Windows (ETW) without any memory patching or hardware breakpoints.  The purpose of breaking ETW is almost always to prevent EDR from gaining telemetry on the execution of C# assemblies. An example of some of the telemetry is shown below with the execution of Seatbelt in-memory inside the NanoBeacon process:</p>
 <p><img src="/assets/img/2023-03-15/bad.png" alt="ProcessHacker shows loaded .Net assemblies"></p>

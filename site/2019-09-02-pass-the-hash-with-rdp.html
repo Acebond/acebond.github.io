@@ -11,12 +11,12 @@
 </head>
 <body>
   <div class="container mx-auto">
-    <nav class="my-10">
+    <nav class="max-w-screen-lg my-10 mx-auto">
       <strong>
         <a href="/index.html">HOME</a>
       </strong>
     </nav>
-    <article class="prose lg:prose-xl max-w-none my-10">
+    <article class="prose lg:prose-xl max-w-screen-lg my-10 mx-auto">
       <h1>Pass-The-Hash with RDP</h1>
       <p>There seems to be a common misconception that you cannot Pass-The-Hash (a NTLM hash) to create a Remote Desktop Connection to a Windows workstation or server. This is untrue.</p>
 <p>Starting with Windows 2012 R2 and Windows 8.1 (although the functionality was <a href="https://support.microsoft.com/en-us/help/2984976/rdp-8-0-update-for-restricted-administration-on-windows-7-or-windows-s">backported</a> to Windows 7 and Windows Server 2008 R2), Microsoft introduced Restricted Admin mode. Normally when an RDP session is established, the credentials are passed and stored on the remote server. Connections made in Restricted Admin mode won't send the credentials to the remote server. This protects the user if connecting to a endpoint that has been compromised. This also means we can establish an RDP session in Restricted Admin mode using only an NTLM hash for authentication.</p>

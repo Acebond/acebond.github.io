@@ -11,12 +11,12 @@
 </head>
 <body>
   <div class="container mx-auto">
-    <nav class="my-10">
+    <nav class="max-w-screen-lg my-10 mx-auto">
       <strong>
         <a href="/index.html">HOME</a>
       </strong>
     </nav>
-    <article class="prose lg:prose-xl max-w-none my-10">
+    <article class="prose lg:prose-xl max-w-screen-lg my-10 mx-auto">
       <h1>EdgeGdi.dll for Persistence and Lateral Movement</h1>
       <p>I recently read <a href="https://www.chadduffey.com/windows/release_notes/2020/10/10/edgegdi.html">https://www.chadduffey.com/windows/release_notes/2020/10/10/edgegdi.html</a> which describes how EdgeGdi.dll can be used for persistence, although with the caveat that “Windows wont tolerate the implementation as described here [linked blog post] over a reboot, it’ll blue screen”.</p>
 <p>I decided to take on the challenge of solving the blue screen on reboot issue. I created the DLL as described, placed it into System32 and when I rebooted received the stop code 0xC000007B (see Figure 1). Googling the stop code provided no helpful information.</p>

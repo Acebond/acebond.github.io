@@ -11,12 +11,12 @@
 </head>
 <body>
   <div class="container mx-auto">
-    <nav class="my-10">
+    <nav class="max-w-screen-lg my-10 mx-auto">
       <strong>
         <a href="/index.html">HOME</a>
       </strong>
     </nav>
-    <article class="prose lg:prose-xl max-w-none my-10">
+    <article class="prose lg:prose-xl max-w-screen-lg my-10 mx-auto">
       <h1>Getting Local Admin with only an NTLM Hash</h1>
       <p>Imagine if an unprivileged user (i.e. not a member of local administrators) found an NTLM hash of a user within the local administrators group. Could the unprivileged user obtain admin privileges? TLDR; Yes!</p>
 <p>At first I thought maybe you could Pass-The-Hash to local services like WMI, SMB, etc using something like <a href="https://github.com/Kevin-Robertson/Invoke-TheHash">https://github.com/Kevin-Robertson/Invoke-TheHash</a>. I quickly discovered that those services do not allow user credentials to be specified for local connections. If anyone has a workaround to this, without requiring a second machine on the network, please let me know @aceb0nd.</p>

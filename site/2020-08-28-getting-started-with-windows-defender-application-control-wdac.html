@@ -3,14 +3,17 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://acebond.github.io/">
+  <meta property="og:title" content="Getting Started with Windows Defender Application Control (WDAC)">
   <script src="https://cdn.tailwindcss.com?plugins=typography"></script>
   <title>Blog</title>
 </head>
 <body class="my-12">
   <div class="container mx-auto">
     <article class="prose lg:prose-xl max-w-none">
-        <h1>Getting Started with Windows Defender Application Control (WDAC)</h1>
-<p>Windows Defender Application Control (WDAC), formerly known as Device Guard, is a Microsoft Windows secure feature that restricts executable code, including scripts run by enlightened Windows script hosts, to those that conform to the device code integrity policy. WDAC prevents the execution, loading and running of unwanted or malicious code, drivers and scripts. WDAC also provides extensive event auditing capability that can be used to detect attacks and malicious behaviour.</p>
+      <h1>Getting Started with Windows Defender Application Control (WDAC)</h1>
+      <p>Windows Defender Application Control (WDAC), formerly known as Device Guard, is a Microsoft Windows secure feature that restricts executable code, including scripts run by enlightened Windows script hosts, to those that conform to the device code integrity policy. WDAC prevents the execution, loading and running of unwanted or malicious code, drivers and scripts. WDAC also provides extensive event auditing capability that can be used to detect attacks and malicious behaviour.</p>
 <h2>Configuring WDAC</h2>
 <p>WDAC works on all versions of Windows, however, prior to Windows 10 version 2004 only Windows 10 Enterprise had the capability to create policies. I used Windows 10 version 2004 Professional to create this blog post.</p>
 <p>On a supported OS version you can deploy the default Windows WDAC audit policy with the command:</p>

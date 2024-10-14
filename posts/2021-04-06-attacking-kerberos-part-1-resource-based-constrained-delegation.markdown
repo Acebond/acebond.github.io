@@ -1,4 +1,6 @@
-# Kerberos Abuse Part 1 - Resource-Based Constrained Delegation
+---
+title: Kerberos Abuse Part 1 - Resource-Based Constrained Delegation
+---
 
 Imagine the below setup, with Bravo being a low privileged user, and HEADHUNTER being configured with Unconstrained Delegation.
 

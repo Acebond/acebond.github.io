@@ -11,6 +11,8 @@ import (
 	"strings"
 
 	"github.com/yuin/goldmark"
+	"github.com/yuin/goldmark/parser"
+	"github.com/yuin/goldmark-meta"
 	highlighting "github.com/yuin/goldmark-highlighting/v2"
 )
 
@@ -22,8 +24,17 @@ func reverse(arr []string) {
 	}
 }
 
-func GenerateBlogPage(file *os.File, path string) error {
+func get_meta(meta map[string]interface{}, fileName string, key string) string {
+	value, defined := meta[key].(string)
 
+	if !defined {
+		fmt.Println(fmt.Sprintf("- %v is missing from: %v", key, fileName))
+	}
+
+	return value
+}
+
+func GenerateBlogPage(file *os.File, path string) error {
 	saveDir := "./site/"
 	fileName := filepath.Base(path)
 	fileName = strings.TrimSuffix(fileName, filepath.Ext(fileName))
@@ -34,15 +45,10 @@ func GenerateBlogPage(file *os.File, path string) error {
 		return err
 	}
 
-	titleStartIndex := 2
-	titleEndIndex := bytes.Index(content, []byte{'\r', '\n'})
-	title := string(content[titleStartIndex:titleEndIndex])
-
-	// Add title for index page
-	blogTitles = append(blogTitles, fmt.Sprintf("- [%v](%v)", title, "/site/"+fileName))
 
 	md := goldmark.New(
 		goldmark.WithExtensions(
+			meta.Meta,
 			highlighting.NewHighlighting(
 				highlighting.WithStyle("dracula"),
 			),
@@ -56,17 +62,32 @@ func GenerateBlogPage(file *os.File, path string) error {
 	defer htmlFile.Close()
 
 	var htmlOutput bytes.Buffer
-	err = md.Convert(content, &htmlOutput)
+	context := parser.NewContext()
+	err = md.Convert(content, &htmlOutput, parser.WithContext(context))
 	if err != nil {
 		return err
 	}
+
+	metaData := meta.Get(context)
+	title := get_meta(metaData, fileName, "title")
+
+	// Add title for index page
+	blogTitles = append(blogTitles, fmt.Sprintf("- [%v](%v)", title, "/site/"+fileName))
 
 	tpl, err := template.ParseFiles("post.html")
 	if err != nil {
 		return err
 	}
 
-	err = tpl.Execute(htmlFile, template.HTML(htmlOutput.String()))
+	templateData := struct {
+		Title string
+		Post template.HTML
+	}{
+		Title: title,
+		Post: template.HTML(htmlOutput.String()),
+	}
+
+	err = tpl.Execute(htmlFile, templateData)
 	if err != nil {
 		return err
 	}

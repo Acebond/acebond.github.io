@@ -1,4 +1,6 @@
-# Getting Started with Windows Defender Application Control (WDAC)
+---
+title: Getting Started with Windows Defender Application Control (WDAC)
+---
 
 Windows Defender Application Control (WDAC), formerly known as Device Guard, is a Microsoft Windows secure feature that restricts executable code, including scripts run by enlightened Windows script hosts, to those that conform to the device code integrity policy. WDAC prevents the execution, loading and running of unwanted or malicious code, drivers and scripts. WDAC also provides extensive event auditing capability that can be used to detect attacks and malicious behaviour.
 

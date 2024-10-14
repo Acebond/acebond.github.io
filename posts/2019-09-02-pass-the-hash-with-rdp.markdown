@@ -1,4 +1,6 @@
-# Pass-The-Hash with RDP
+---
+title: Pass-The-Hash with RDP
+---
 
 There seems to be a common misconception that you cannot Pass-The-Hash (a NTLM hash) to create a Remote Desktop Connection to a Windows workstation or server. This is untrue.
 

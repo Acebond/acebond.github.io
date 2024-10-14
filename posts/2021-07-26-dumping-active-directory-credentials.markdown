@@ -1,4 +1,6 @@
-# Dumping Active Directory Credentials
+---
+title: Dumping Active Directory Credentials
+---
 
 All Active Directory user account password hashes are stored inside the ntds.dit database file on the Domain Controllers. However, if you have ever tried copying the file, you'll probably have received the following error message.
 

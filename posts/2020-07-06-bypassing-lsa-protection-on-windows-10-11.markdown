@@ -1,4 +1,6 @@
-# Bypassing LSA Protection on Windows 10/11
+---
+title: Bypassing LSA Protection on Windows 10/11
+---
 
 Starting with Windows 8.1 (and Server 2012 R2) Microsoft introduced a feature termed LSA Protection. This feature is based on the Protected Process Light (PPL) technology which is a defense-in-depth security feature that is designed to “prevent non-administrative non-PPL processes from accessing or tampering with code and data in a PPL process via open process functions”.
 

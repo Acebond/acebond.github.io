@@ -1,4 +1,6 @@
-# Windows Credential Management, Logon Sessions and the Double Hop Problem
+---
+title: Windows Credential Management, Logon Sessions and the Double Hop Problem
+---
 
 I wanted to provide a quick overview on Windows credential management in relation to penetration testing, why passwords are not always stored in memory and the Double Hop problem.
 

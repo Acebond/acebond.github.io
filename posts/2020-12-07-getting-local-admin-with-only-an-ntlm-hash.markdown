@@ -1,4 +1,6 @@
-# Getting Local Admin with only an NTLM Hash
+---
+title: Getting Local Admin with only an NTLM Hash
+---
 
 Imagine if an unprivileged user (i.e. not a member of local administrators) found an NTLM hash of a user within the local administrators group. Could the unprivileged user obtain admin privileges? TLDR; Yes!
 

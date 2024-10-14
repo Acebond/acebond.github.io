@@ -3,14 +3,17 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://acebond.github.io/">
+  <meta property="og:title" content="Getting Local Admin with only an NTLM Hash">
   <script src="https://cdn.tailwindcss.com?plugins=typography"></script>
   <title>Blog</title>
 </head>
 <body class="my-12">
   <div class="container mx-auto">
     <article class="prose lg:prose-xl max-w-none">
-        <h1>Getting Local Admin with only an NTLM Hash</h1>
-<p>Imagine if an unprivileged user (i.e. not a member of local administrators) found an NTLM hash of a user within the local administrators group. Could the unprivileged user obtain admin privileges? TLDR; Yes!</p>
+      <h1>Getting Local Admin with only an NTLM Hash</h1>
+      <p>Imagine if an unprivileged user (i.e. not a member of local administrators) found an NTLM hash of a user within the local administrators group. Could the unprivileged user obtain admin privileges? TLDR; Yes!</p>
 <p>At first I thought maybe you could Pass-The-Hash to local services like WMI, SMB, etc using something like <a href="https://github.com/Kevin-Robertson/Invoke-TheHash">https://github.com/Kevin-Robertson/Invoke-TheHash</a>. I quickly discovered that those services do not allow user credentials to be specified for local connections. If anyone has a workaround to this, without requiring a second machine on the network, please let me know @aceb0nd.</p>
 <p>The PTH technique <em>could</em> work from a remote system to the compromised device, depending on LocalAccountTokenFilterPolicy and FilterAdministratorToken, but I considered that cheating.</p>
 <p>I then realised, the Windows change password functionality only requires knowing the users NTLM hash. I used Mimikatz to update the password of the administrative account.</p>

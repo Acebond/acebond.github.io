@@ -3,14 +3,17 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://acebond.github.io/">
+  <meta property="og:title" content="A Novel Method for Bypassing ETW">
   <script src="https://cdn.tailwindcss.com?plugins=typography"></script>
   <title>Blog</title>
 </head>
 <body class="my-12">
   <div class="container mx-auto">
     <article class="prose lg:prose-xl max-w-none">
-        <h1>A Novel Method for Bypassing ETW</h1>
-<p>I wanted to bypass Event Tracing for Windows (ETW) without any memory patching or hardware breakpoints.  The purpose of breaking ETW is almost always to prevent EDR from gaining telemetry on the execution of C# assemblies. An example of some of the telemetry is shown below with the execution of Seatbelt in-memory inside the NanoBeacon process:</p>
+      <h1>A Novel Method for Bypassing ETW</h1>
+      <p>I wanted to bypass Event Tracing for Windows (ETW) without any memory patching or hardware breakpoints.  The purpose of breaking ETW is almost always to prevent EDR from gaining telemetry on the execution of C# assemblies. An example of some of the telemetry is shown below with the execution of Seatbelt in-memory inside the NanoBeacon process:</p>
 <p><img src="/assets/img/2023-03-15/bad.png" alt="ProcessHacker shows loaded .Net assemblies"></p>
 <p>The current public methods of breaking ETW all patch functions in memory. They do something like this:</p>
 <pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;"><code><span style="display:flex;"><span>BOOL <span style="color:#50fa7b">patchETW</span>(BOOL revertETW) {

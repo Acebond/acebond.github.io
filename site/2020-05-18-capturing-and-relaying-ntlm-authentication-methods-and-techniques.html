@@ -3,14 +3,17 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://acebond.github.io/">
+  <meta property="og:title" content="Capturing and Relaying NTLM Authentication: Methods and Techniques">
   <script src="https://cdn.tailwindcss.com?plugins=typography"></script>
   <title>Blog</title>
 </head>
 <body class="my-12">
   <div class="container mx-auto">
     <article class="prose lg:prose-xl max-w-none">
-        <h1>Capturing and Relaying NTLM Authentication: Methods and Techniques</h1>
-<p>This blog post will provide an overview of the methods available to force NTLM authentication to a rogue server, and capture or relay the credential material. These attacks can be leveraged to escalate privileges within an Active Directory domain environment. I like to look at these attacks as having 3 stages which are:</p>
+      <h1>Capturing and Relaying NTLM Authentication: Methods and Techniques</h1>
+      <p>This blog post will provide an overview of the methods available to force NTLM authentication to a rogue server, and capture or relay the credential material. These attacks can be leveraged to escalate privileges within an Active Directory domain environment. I like to look at these attacks as having 3 stages which are:</p>
 <ol>
 <li>Positioning a rogue authentication server so that it is accessible by the victims’ endpoint;</li>
 <li>Persuading the victim user or OS into authenticating to the rogue server; and lastly</li>

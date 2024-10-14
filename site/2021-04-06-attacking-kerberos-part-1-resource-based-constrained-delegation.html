@@ -3,14 +3,17 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://acebond.github.io/">
+  <meta property="og:title" content="Kerberos Abuse Part 1 - Resource-Based Constrained Delegation">
   <script src="https://cdn.tailwindcss.com?plugins=typography"></script>
   <title>Blog</title>
 </head>
 <body class="my-12">
   <div class="container mx-auto">
     <article class="prose lg:prose-xl max-w-none">
-        <h1>Kerberos Abuse Part 1 - Resource-Based Constrained Delegation</h1>
-<p>Imagine the below setup, with Bravo being a low privileged user, and HEADHUNTER being configured with Unconstrained Delegation.</p>
+      <h1>Kerberos Abuse Part 1 - Resource-Based Constrained Delegation</h1>
+      <p>Imagine the below setup, with Bravo being a low privileged user, and HEADHUNTER being configured with Unconstrained Delegation.</p>
 <p><img src="/assets/img/2021-04-06/image.png" alt="Bravo has GenericWrite to HEADHUNTER"></p>
 <p>This can be exploited to achieve Domain Admin privileges by performing a Resource-Based Constrained Delegation (RBCD) attack to gain control of HEADHUNTER. Then using Unconstrained Delegation on HEADHUNTER to gain control of the Domain Controller via the printer bug.</p>
 <h2>Preconditions for RBCD</h2>

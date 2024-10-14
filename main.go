@@ -75,7 +75,7 @@ func GenerateBlogPage(file *os.File, path string) error {
 	// Add title for index page
 	blogTitles = append(blogTitles, fmt.Sprintf("- [%v](%v)", title, "/site/"+fileName))
 
-	tpl, err := template.ParseFiles("post.html")
+	tpl, err := template.ParseFiles("./templates/post.html")
 	if err != nil {
 		return err
 	}
@@ -115,7 +115,7 @@ func GenerateIndexPage() error {
 		return err
 	}
 
-	tpl, err := template.ParseFiles("index.tmpl")
+	tpl, err := template.ParseFiles("./templates/index.html")
 	if err != nil {
 		return err
 	}

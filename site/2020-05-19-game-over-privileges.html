@@ -9,9 +9,14 @@
   <script src="https://cdn.tailwindcss.com?plugins=typography"></script>
   <title>Game Over Privileges</title>
 </head>
-<body class="my-12">
+<body>
   <div class="container mx-auto">
-    <article class="prose lg:prose-xl max-w-none">
+    <nav class="my-10">
+      <strong>
+        <a href="/index.html">HOME</a> &bull; <a href="/about.html">ABOUT</a>
+      </strong>
+    </nav>
+    <article class="prose lg:prose-xl max-w-none my-10">
       <h1>Game Over Privileges</h1>
       <p>On Windows a privilege is the right of an account, such as a user or group account, to perform various system-related operations on the local computer. There are 36 privileges defined in the <a href="https://docs.microsoft.com/en-us/windows/win32/secauthz/privilege-constants">Privilege Constants</a> although a number are used internally by the operating system. There are a number of privileges that are considered game over, in that, if a user gains access to a game over privilege, they effectively have every privilege and can achieve code execution under the NT AUTHORITY\SYSTEM (referred to as SYSTEM) account.</p>
 <p>I wanted to discuss privileges from a practical offensive standpoint. These are actually just my notes on privileges made into a blog post because I needed to clean them up.</p>
@@ -45,7 +50,7 @@
 <a href="https://github.com/antonioCoco/RoguePotato">https://github.com/antonioCoco/RoguePotato</a></p>
 <p>I’ve opted not to go into detail of the methods as all of the write-ups are fantastic and I highly recommend giving them a read. With the number of methods available it would be highly unlikely that the compromise of a service account doesn’t lead to SYSTEM.</p>
 
-    </article >
+    </article>
   </div>
 </body>
 </html>

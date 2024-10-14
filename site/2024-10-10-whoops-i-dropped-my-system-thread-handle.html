@@ -9,9 +9,14 @@
   <script src="https://cdn.tailwindcss.com?plugins=typography"></script>
   <title>Whoops… I dropped my SYSTEM thread HANDLE</title>
 </head>
-<body class="my-12">
+<body>
   <div class="container mx-auto">
-    <article class="prose lg:prose-xl max-w-none">
+    <nav class="my-10">
+      <strong>
+        <a href="/index.html">HOME</a> &bull; <a href="/about.html">ABOUT</a>
+      </strong>
+    </nav>
+    <article class="prose lg:prose-xl max-w-none my-10">
       <h1>Whoops… I dropped my SYSTEM thread HANDLE</h1>
       <p>I recently came across an interesting finding from <a href="https://github.com/itm4n/PrivescCheck">PrivescCheck</a>, the tool reported an exploitable leaked thread handle. This is when a privileged process leaks a handle (in this case a thread handle) into an unprivileged process, effectively allowing the unprivileged user to gain access to the privileged handle. These must be manually investigated and while mine was unfortunately a false positive, I still wanted to understand how one would exploit this vulnerability.</p>
 <h2>Recreating the Vulnerability</h2>
@@ -102,7 +107,7 @@
 <p><img src="/assets/img/2024-10-10/poc.png" alt="PoC getting a Meterpreter shell"></p>
 <p>GhostWrite then hijacks the SYSTEM thread using the leaked handle and the ROP method described above, creates its own thread inside the SYSTEM process to run a Meterpreter shellcode, and seamlessly restores the original thread execution. Easy-peasy.</p>
 
-    </article >
+    </article>
   </div>
 </body>
 </html>

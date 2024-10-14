@@ -9,12 +9,17 @@
   <script src="https://cdn.tailwindcss.com?plugins=typography"></script>
   <title>{{.Title}}</title>
 </head>
-<body class="my-12">
+<body>
   <div class="container mx-auto">
-    <article class="prose lg:prose-xl max-w-none">
+    <nav class="my-10">
+      <strong>
+        <a href="/index.html">HOME</a> &bull; <a href="/about.html">ABOUT</a>
+      </strong>
+    </nav>
+    <article class="prose lg:prose-xl max-w-none my-10">
       <h1>{{.Title}}</h1>
       {{.Post}}
-    </article >
+    </article>
   </div>
 </body>
 </html>

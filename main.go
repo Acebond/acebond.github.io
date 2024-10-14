@@ -11,12 +11,14 @@ import (
 	"strings"
 
 	"github.com/yuin/goldmark"
-	"github.com/yuin/goldmark/parser"
-	"github.com/yuin/goldmark-meta"
 	highlighting "github.com/yuin/goldmark-highlighting/v2"
+	meta "github.com/yuin/goldmark-meta"
+	"github.com/yuin/goldmark/parser"
 )
 
-var blogTitles = []string{}
+var (
+	blogTitles = []string{}
+)
 
 func reverse(arr []string) {
 	for i, j := 0, len(arr)-1; i < j; i, j = i+1, j-1 {
@@ -44,7 +46,6 @@ func GenerateBlogPage(file *os.File, path string) error {
 	if err != nil {
 		return err
 	}
-
 
 	md := goldmark.New(
 		goldmark.WithExtensions(
@@ -81,10 +82,10 @@ func GenerateBlogPage(file *os.File, path string) error {
 
 	templateData := struct {
 		Title string
-		Post template.HTML
+		Post  template.HTML
 	}{
 		Title: title,
-		Post: template.HTML(htmlOutput.String()),
+		Post:  template.HTML(htmlOutput.String()),
 	}
 
 	err = tpl.Execute(htmlFile, templateData)
@@ -154,5 +155,4 @@ func main() {
 	}
 
 	GenerateIndexPage()
-
 }

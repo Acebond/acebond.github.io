@@ -9,9 +9,14 @@
   <script src="https://cdn.tailwindcss.com?plugins=typography"></script>
   <title>Bypassing LSA Protection on Windows 10/11</title>
 </head>
-<body class="my-12">
+<body>
   <div class="container mx-auto">
-    <article class="prose lg:prose-xl max-w-none">
+    <nav class="my-10">
+      <strong>
+        <a href="/index.html">HOME</a> &bull; <a href="/about.html">ABOUT</a>
+      </strong>
+    </nav>
+    <article class="prose lg:prose-xl max-w-none my-10">
       <h1>Bypassing LSA Protection on Windows 10/11</h1>
       <p>Starting with Windows 8.1 (and Server 2012 R2) Microsoft introduced a feature termed LSA Protection. This feature is based on the Protected Process Light (PPL) technology which is a defense-in-depth security feature that is designed to “prevent non-administrative non-PPL processes from accessing or tampering with code and data in a PPL process via open process functions”.</p>
 <p>I’ve noticed there is a common misconception that LSA Protection prevents attacks that leverage SeDebug or Administrative privileges to extract credential material from memory, like Mimikatz. LSA Protection does NOT protect from these attacks, at best it makes them slightly more difficult as an extra step needs to be performed.</p>
@@ -36,7 +41,7 @@
 <p>{% include embed/youtube.html id='w2_KqnhgN94' %}</p>
 <p>The tool which is written in C/C++ to perform this attack can be found on <a href="https://github.com/RedCursorSecurityConsulting/PPLKiller">GitHub</a>. I’ve only tested on Windows 1903, 1909 and 2004. It should work on all versions of Windows since the feature was introduced but I’ve only got the offsets for those versions implemented.</p>
 
-    </article >
+    </article>
   </div>
 </body>
 </html>

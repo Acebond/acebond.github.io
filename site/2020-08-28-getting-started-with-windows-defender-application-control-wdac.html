@@ -9,9 +9,14 @@
   <script src="https://cdn.tailwindcss.com?plugins=typography"></script>
   <title>Getting Started with Windows Defender Application Control (WDAC)</title>
 </head>
-<body class="my-12">
+<body>
   <div class="container mx-auto">
-    <article class="prose lg:prose-xl max-w-none">
+    <nav class="my-10">
+      <strong>
+        <a href="/index.html">HOME</a> &bull; <a href="/about.html">ABOUT</a>
+      </strong>
+    </nav>
+    <article class="prose lg:prose-xl max-w-none my-10">
       <h1>Getting Started with Windows Defender Application Control (WDAC)</h1>
       <p>Windows Defender Application Control (WDAC), formerly known as Device Guard, is a Microsoft Windows secure feature that restricts executable code, including scripts run by enlightened Windows script hosts, to those that conform to the device code integrity policy. WDAC prevents the execution, loading and running of unwanted or malicious code, drivers and scripts. WDAC also provides extensive event auditing capability that can be used to detect attacks and malicious behaviour.</p>
 <h2>Configuring WDAC</h2>
@@ -77,7 +82,7 @@ To demonstrate, I’ve used the well known MSBuild executable to execute a Cobal
 <p>WDAC is a security feature built on security boundaries that are guaranteed to be serviced by Microsoft. AppLocker is great, but it's designed for when you are using application control to help users avoid running unapproved software, and is not designed as a security feature.</p>
 <p>Getting initial code execution on an endpoint device is one of the most difficult phases during a red team engagement. As such, malicious or unintended code execution on a device should be treated as a security boundary. Preventing code execution from taking place in the first instance is one of the best defensive actions that can be implemented within an organisation.</p>
 
-    </article >
+    </article>
   </div>
 </body>
 </html>

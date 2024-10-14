@@ -50,8 +50,14 @@ mov [reg1]; jmp reg2
 With these gadgets, and a **VERY** good (nobody seems to talk about the shadow space except for <https://retroscience.net/x64-assembly.html>, thank you) understanding of the Windows 64bit calling convention, we can execute a function in the remote thread like so:
 
 ```c
-DWORD64 CallFuncRemote(HANDLE hThread, Gadgets gadgets, DWORD64 funcAddr, BOOL returnVal, const uint64_t count, const DWORD64 parameters[]) {
-
+DWORD64 CallFuncRemote(
+    HANDLE hThread,
+    Gadgets gadgets,
+    DWORD64 funcAddr,
+    BOOL returnVal,
+    const uint64_t count,
+    const DWORD64 parameters[])
+{
     // 1. Check/Fix Stack alignment
     CONTEXT ctx = { .ContextFlags = CONTEXT_FULL };
 

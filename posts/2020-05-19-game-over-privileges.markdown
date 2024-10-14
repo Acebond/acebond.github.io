@@ -1,4 +1,6 @@
-# Game Over Privileges
+---
+title: Game Over Privileges
+---
 
 On Windows a privilege is the right of an account, such as a user or group account, to perform various system-related operations on the local computer. There are 36 privileges defined in the [Privilege Constants](https://docs.microsoft.com/en-us/windows/win32/secauthz/privilege-constants) although a number are used internally by the operating system. There are a number of privileges that are considered game over, in that, if a user gains access to a game over privilege, they effectively have every privilege and can achieve code execution under the NT AUTHORITY\SYSTEM (referred to as SYSTEM) account.
 

@@ -1,4 +1,6 @@
-# Kerberos Abuse Part 3 - Constrained Delegation
+---
+title: Kerberos Abuse Part 3 - Constrained Delegation
+---
 
 I wanted to complete the The Power of Kerberos series by looking at Constrained Delegation, the last type of Kerberos delegation. This post will demonstrate how Constrained Delegation can be leveraged within an Active Directory environment for lateral movement and privilege escalation.
 

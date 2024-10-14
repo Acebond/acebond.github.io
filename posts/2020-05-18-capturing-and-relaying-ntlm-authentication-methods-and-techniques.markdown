@@ -1,4 +1,6 @@
-# Capturing and Relaying NTLM Authentication: Methods and Techniques
+---
+title: "Capturing and Relaying NTLM Authentication: Methods and Techniques"
+---
 
 This blog post will provide an overview of the methods available to force NTLM authentication to a rogue server, and capture or relay the credential material. These attacks can be leveraged to escalate privileges within an Active Directory domain environment. I like to look at these attacks as having 3 stages which are:
 

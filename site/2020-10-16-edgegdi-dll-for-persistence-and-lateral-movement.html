@@ -3,14 +3,17 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://acebond.github.io/">
+  <meta property="og:title" content="EdgeGdi.dll for Persistence and Lateral Movement">
   <script src="https://cdn.tailwindcss.com?plugins=typography"></script>
   <title>Blog</title>
 </head>
 <body class="my-12">
   <div class="container mx-auto">
     <article class="prose lg:prose-xl max-w-none">
-        <h1>EdgeGdi.dll for Persistence and Lateral Movement</h1>
-<p>I recently read <a href="https://www.chadduffey.com/windows/release_notes/2020/10/10/edgegdi.html">https://www.chadduffey.com/windows/release_notes/2020/10/10/edgegdi.html</a> which describes how EdgeGdi.dll can be used for persistence, although with the caveat that “Windows wont tolerate the implementation as described here [linked blog post] over a reboot, it’ll blue screen”.</p>
+      <h1>EdgeGdi.dll for Persistence and Lateral Movement</h1>
+      <p>I recently read <a href="https://www.chadduffey.com/windows/release_notes/2020/10/10/edgegdi.html">https://www.chadduffey.com/windows/release_notes/2020/10/10/edgegdi.html</a> which describes how EdgeGdi.dll can be used for persistence, although with the caveat that “Windows wont tolerate the implementation as described here [linked blog post] over a reboot, it’ll blue screen”.</p>
 <p>I decided to take on the challenge of solving the blue screen on reboot issue. I created the DLL as described, placed it into System32 and when I rebooted received the stop code 0xC000007B (see Figure 1). Googling the stop code provided no helpful information.</p>
 <p><img src="/assets/img/2020-10-16/bsod.png" alt="Figure 1 - Stop code 0xC000007B">
 <em>Figure 1 - Stop code 0xC000007B</em></p>

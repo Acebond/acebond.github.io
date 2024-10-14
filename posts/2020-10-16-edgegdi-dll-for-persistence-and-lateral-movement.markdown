@@ -1,4 +1,6 @@
-# EdgeGdi.dll for Persistence and Lateral Movement
+---
+title: EdgeGdi.dll for Persistence and Lateral Movement
+---
 
 I recently read [https://www.chadduffey.com/windows/release_notes/2020/10/10/edgegdi.html](https://www.chadduffey.com/windows/release_notes/2020/10/10/edgegdi.html) which describes how EdgeGdi.dll can be used for persistence, although with the caveat that “Windows wont tolerate the implementation as described here [linked blog post] over a reboot, it’ll blue screen”.
 

@@ -3,14 +3,17 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://acebond.github.io/">
+  <meta property="og:title" content="Bypassing LSA Protection on Windows 10/11">
   <script src="https://cdn.tailwindcss.com?plugins=typography"></script>
   <title>Blog</title>
 </head>
 <body class="my-12">
   <div class="container mx-auto">
     <article class="prose lg:prose-xl max-w-none">
-        <h1>Bypassing LSA Protection on Windows 10/11</h1>
-<p>Starting with Windows 8.1 (and Server 2012 R2) Microsoft introduced a feature termed LSA Protection. This feature is based on the Protected Process Light (PPL) technology which is a defense-in-depth security feature that is designed to “prevent non-administrative non-PPL processes from accessing or tampering with code and data in a PPL process via open process functions”.</p>
+      <h1>Bypassing LSA Protection on Windows 10/11</h1>
+      <p>Starting with Windows 8.1 (and Server 2012 R2) Microsoft introduced a feature termed LSA Protection. This feature is based on the Protected Process Light (PPL) technology which is a defense-in-depth security feature that is designed to “prevent non-administrative non-PPL processes from accessing or tampering with code and data in a PPL process via open process functions”.</p>
 <p>I’ve noticed there is a common misconception that LSA Protection prevents attacks that leverage SeDebug or Administrative privileges to extract credential material from memory, like Mimikatz. LSA Protection does NOT protect from these attacks, at best it makes them slightly more difficult as an extra step needs to be performed.</p>
 <p>To bypass LSA Protection you have a few options:</p>
 <ol>

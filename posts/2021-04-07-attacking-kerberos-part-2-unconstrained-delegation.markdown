@@ -1,4 +1,6 @@
-# Kerberos Abuse Part 2 - Unconstrained Delegation
+---
+title: Kerberos Abuse Part 2 - Unconstrained Delegation
+---
 
 We are continuing from Part 1 and leveraging Unconstrained Delegation on HEADHUNTER to gain Domain Admin privileges via the printer bug.
 

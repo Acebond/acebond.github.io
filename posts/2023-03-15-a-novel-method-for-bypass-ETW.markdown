@@ -1,4 +1,6 @@
-# A Novel Method for Bypassing ETW
+---
+title: A Novel Method for Bypassing ETW
+---
 
 I wanted to bypass Event Tracing for Windows (ETW) without any memory patching or hardware breakpoints.  The purpose of breaking ETW is almost always to prevent EDR from gaining telemetry on the execution of C# assemblies. An example of some of the telemetry is shown below with the execution of Seatbelt in-memory inside the NanoBeacon process:
 

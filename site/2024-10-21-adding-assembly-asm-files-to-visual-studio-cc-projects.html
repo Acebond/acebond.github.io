@@ -18,35 +18,36 @@
     </nav>
     <article class="prose lg:prose-xl max-w-screen-lg my-10 mx-auto">
       <h1>Adding Assembly (asm) Files to Visual Studio C/C&#43;&#43; Projects</h1>
-      <p><strong>0)</strong>
-I have created an empty C/C++ project, added a single source file, and ensured my environment is working. This is the starting point.
+      <h3>Step 0</h3>
+<p>Create a new empty C/C++ project and add some C/C++ source code or open an existing project.
 <img src="/assets/img/2024-10-21/start.png" alt="Start"></p>
-<p><strong>1)</strong>
-Go <code>Project -&gt; Build Customization...</code>
+<h3>Step 1</h3>
+<p>Go <code>Project -&gt; Build Customization...</code>
 <img src="/assets/img/2024-10-21/step1.png" alt="Step 1"></p>
-<p><strong>2)</strong>
-In the <code>Visual C++ Build Customization Files</code> window tick <code>masm(.targets, .props)</code> and click on <code>OK</code>.
+<h3>Step 2</h3>
+<p>In the <code>Visual C++ Build Customization Files</code> dialog, tick <code>masm(.targets, .props)</code> and click on <code>OK</code>.
 <img src="/assets/img/2024-10-21/step2.png" alt="Step 2"></p>
-<p><strong>3)</strong>
-Right click <code>Source Files</code>, chose <code>Add</code>, then <code>New Item...</code>
+<h3>Step 3</h3>
+<p>Right click <code>Source Files</code>, choose <code>Add</code>, then <code>New Item...</code>
 <img src="/assets/img/2024-10-21/step3.png" alt="Step 3"></p>
-<p><strong>4)</strong>
-In the <code>Add New Item</code> dialog, select <code>C++ File (.cpp)</code>, and you <strong>MUST</strong> name the file with a <code>.asm</code> extension, then click <code>Add</code>.
+<h3>Step 4</h3>
+<p>In the <code>Add New Item</code> dialog, select <code>C++ File (.cpp)</code>, and name the file with a <code>.asm</code> extension, then click <code>Add</code>.
+<strong>NOTE: that the <code>.asm</code> extension is important.</strong>
 <img src="/assets/img/2024-10-21/step4.png" alt="Step 4"></p>
-<p><strong>5)</strong>
-Write some asm code.
+<h3>Step 5</h3>
+<p>Write some asm code.
 <img src="/assets/img/2024-10-21/step5.png" alt="Step 5"></p>
-<p><strong>6)</strong>
-Update <code>main.c</code> to call the new asm function.
+<h3>Step 6</h3>
+<p>Update <code>main.c</code> to call the new asm function.
 <img src="/assets/img/2024-10-21/step6.png" alt="Step 6"></p>
-<p><strong>7)</strong>
-Everything should work.
+<h3>Step 7</h3>
+<p>Everything should work.
 <img src="/assets/img/2024-10-21/step7.png" alt="Step 7"></p>
-<p><strong>8)</strong>
-If you have issue, check the <code>.asm</code> file by right clicking, and going <code>Properties</code>.
+<h3>Step 8</h3>
+<p>If you have issue, check the <code>.asm</code> file by right clicking, and going <code>Properties</code>.
 <img src="/assets/img/2024-10-21/step8.png" alt="Step 8"></p>
-<p><strong>9)</strong>
-In the dialog, ensure <code>Item Type</code> is <code>Microsoft Macro Assembler</code> then click <code>OK</code>.
+<h3>Step 9</h3>
+<p>In the dialog, ensure <code>Item Type</code> is <code>Microsoft Macro Assembler</code> then click <code>OK</code>.
 <img src="/assets/img/2024-10-21/step9.png" alt="Step 9"></p>
 
     </article>

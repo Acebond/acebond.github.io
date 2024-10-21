@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://acebond.github.io/">
+  <meta property="og:title" content="Adding Assembly (asm) Files to Visual Studio C/C&#43;&#43; Projects">
+  <script src="https://cdn.tailwindcss.com?plugins=typography"></script>
+  <title>Adding Assembly (asm) Files to Visual Studio C/C&#43;&#43; Projects</title>
+</head>
+<body>
+  <div class="container mx-auto">
+    <nav class="max-w-screen-lg my-10 mx-auto">
+      <strong>
+        <a href="/index.html">HOME</a>
+      </strong>
+    </nav>
+    <article class="prose lg:prose-xl max-w-screen-lg my-10 mx-auto">
+      <h1>Adding Assembly (asm) Files to Visual Studio C/C&#43;&#43; Projects</h1>
+      <h2>Step 0</h2>
+<p>I have created an empty C/C++ project, added a single source file, and ensured my environemnt is working. This is the starting point.
+<img src="/assets/img/2024-10-21/start.png" alt="Start"></p>
+<h2>Step 1</h2>
+<p>Go <code>Project -&gt; Build Customization...</code>
+<img src="/assets/img/2024-10-21/step1.png" alt="Step 1"></p>
+<h2>Step 2</h2>
+<p>In the <code>Visual C++ Build Customization Files</code> window tick <code>masm(.targets, .props)</code> and click on <code>OK</code>.
+<img src="/assets/img/2024-10-21/step2.png" alt="Step 2"></p>
+<h2>Step 3</h2>
+<p>Right click <code>Source Files</code>, chose <code>Add</code>, then <code>New Item...</code>
+<img src="/assets/img/2024-10-21/step3.png" alt="Step 3"></p>
+<h2>Step 4</h2>
+<p>In the <code>Add New Item</code> dialog, select <code>C++ File (.cpp)</code>, and you <strong>MUST</strong> name the file with a <code>.asm</code> extension, then click <code>Add</code>.
+<img src="/assets/img/2024-10-21/step4.png" alt="Step 4"></p>
+<h2>Step 5</h2>
+<p>Write some asm code.
+<img src="/assets/img/2024-10-21/step5.png" alt="Step 5"></p>
+<h2>Step 6</h2>
+<p>Update <code>main.c</code> to call the new asm function.
+<img src="/assets/img/2024-10-21/step6.png" alt="Step 6"></p>
+<h2>Step 7</h2>
+<p>Everything should work.
+<img src="/assets/img/2024-10-21/step7.png" alt="Step 7"></p>
+<h2>Step 8</h2>
+<p>If you have issue, check the <code>.asm</code> file by right clicking, and going <code>Properties</code>.
+<img src="/assets/img/2024-10-21/step8.png" alt="Step 8"></p>
+<h2>Step 9</h2>
+<p>In the dialog, ensure <code>Item Type</code> is <code>Microsoft Macro Assembler</code> then click <code>OK</code>.
+<img src="/assets/img/2024-10-21/step9.png" alt="Step 9"></p>
+
+    </article>
+  </div>
+</body>
+</html>

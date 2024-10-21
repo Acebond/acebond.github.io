@@ -20,6 +20,11 @@ var (
 	blogTitles = []string{}
 )
 
+type Post struct {
+	Title string
+	Post  template.HTML
+}
+
 func reverse(arr []string) {
 	for i, j := 0, len(arr)-1; i < j; i, j = i+1, j-1 {
 		arr[i], arr[j] = arr[j], arr[i]
@@ -80,10 +85,7 @@ func GenerateBlogPage(file *os.File, path string) error {
 		return err
 	}
 
-	templateData := struct {
-		Title string
-		Post  template.HTML
-	}{
+	templateData := Post{
 		Title: title,
 		Post:  template.HTML(htmlOutput.String()),
 	}
@@ -115,12 +117,17 @@ func GenerateIndexPage() error {
 		return err
 	}
 
-	tpl, err := template.ParseFiles("./templates/index.html")
+	tpl, err := template.ParseFiles("./templates/post.html")
 	if err != nil {
 		return err
 	}
 
-	err = tpl.Execute(htmlFile, template.HTML(htmlOutput.String()))
+	templateData := Post{
+		Title: "Posts",
+		Post:  template.HTML(htmlOutput.String()),
+	}
+
+	err = tpl.Execute(htmlFile, templateData)
 	if err != nil {
 		return err
 	}

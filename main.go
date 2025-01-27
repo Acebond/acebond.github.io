@@ -36,7 +36,7 @@ func get_meta(meta map[string]interface{}, fileName string, key string) string {
 	value, defined := meta[key].(string)
 
 	if !defined {
-		fmt.Println(fmt.Sprintf("- %v is missing from: %v", key, fileName))
+		fmt.Printf("%v is missing from: %v\n", key, fileName)
 	}
 
 	return value
@@ -80,7 +80,7 @@ func GenerateBlogPage(file *os.File, path string) error {
 	title := get_meta(metaData, fileName, "title")
 
 	// Add title for index page
-	blogTitles = append(blogTitles, fmt.Sprintf("- [%v](%v)", title, "/site/"+fileName))
+	blogTitles = append(blogTitles, fmt.Sprintf("- [%v](%v)", title, "./"+fileName))
 
 	tpl, err := template.ParseFiles("./templates/post.html")
 	if err != nil {
@@ -104,7 +104,7 @@ func GenerateIndexPage() error {
 
 	md := goldmark.New()
 
-	savePath := "./index.html"
+	savePath := "./site/index.html"
 	htmlFile, err := os.Create(savePath)
 	if err != nil {
 		return err

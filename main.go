@@ -13,6 +13,7 @@ import (
 	"github.com/yuin/goldmark"
 	highlighting "github.com/yuin/goldmark-highlighting/v2"
 	meta "github.com/yuin/goldmark-meta"
+	"github.com/yuin/goldmark/extension"
 	"github.com/yuin/goldmark/parser"
 )
 
@@ -54,6 +55,7 @@ func GenerateBlogPage(file *os.File, path string) error {
 
 	md := goldmark.New(
 		goldmark.WithExtensions(
+			extension.GFM,
 			meta.Meta,
 			highlighting.NewHighlighting(
 				highlighting.WithStyle("dracula"),

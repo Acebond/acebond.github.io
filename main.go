@@ -150,6 +150,10 @@ func main() {
 			return nil
 		}
 
+		if strings.HasPrefix(info.Name(), "HIDDEN") {
+			return nil
+		}
+
 		file, err := os.Open(path)
 		if err != nil {
 			return err

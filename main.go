@@ -80,7 +80,7 @@ func GenerateBlogPage(file *os.File, path string) error {
 	title := get_meta(metaData, fileName, "title")
 
 	// Add title for index page
-	blogTitles = append(blogTitles, fmt.Sprintf("- [%v](%v)", title, "./"+fileName))
+	blogTitles = append(blogTitles, fmt.Sprintf("- [%v](%v)", title, "/"+fileName))
 
 	tpl, err := template.ParseFiles("./templates/post.html")
 	if err != nil {

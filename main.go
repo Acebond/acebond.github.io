@@ -9,6 +9,7 @@ import (
 	"os"
 	"path/filepath"
 	"strings"
+	"time"
 
 	"github.com/yuin/goldmark"
 	highlighting "github.com/yuin/goldmark-highlighting/v2"
@@ -19,6 +20,8 @@ import (
 
 var (
 	blogTitles = []string{}
+	blogURLS   = []string{}
+	baseURL    = "https://acebond.github.io"
 )
 
 type Post struct {
@@ -82,6 +85,7 @@ func GenerateBlogPage(file *os.File, path string, info os.FileInfo) error {
 	// Add title for index page
 	if !strings.HasPrefix(info.Name(), "HIDDEN") {
 		blogTitles = append(blogTitles, fmt.Sprintf("- [%v](%v)", title, "/"+fileName))
+		blogURLS = append(blogURLS, baseURL+"/"+fileName)
 	}
 
 	tpl, err := template.ParseFiles("./templates/post.html")
@@ -139,6 +143,45 @@ func GenerateIndexPage() error {
 	return nil
 }
 
+func GenerateSitemap() error {
+	savePath := "./site/sitemap.xml"
+	f, err := os.Create(savePath)
+	if err != nil {
+		return err
+	}
+	defer f.Close()
+
+	now := time.Now().Format("2006-01-02")
+
+	var sb strings.Builder
+	sb.WriteString(`<?xml version="1.0" encoding="UTF-8"?>` + "\n")
+	sb.WriteString(`<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">` + "\n")
+
+	// Add index page
+	sb.WriteString("  <url>\n")
+	sb.WriteString("    <loc>" + baseURL + "/</loc>\n")
+	sb.WriteString("    <lastmod>" + now + "</lastmod>\n")
+	sb.WriteString("  </url>\n")
+
+	for _, url := range blogURLS {
+		//start := strings.Index(entry, "](")
+		//end := strings.Index(entry, ")")
+		//if start == -1 || end == -1 || end <= start+2 {
+		//	continue
+		//}
+		//urlPath := entry[start+2 : end]
+
+		sb.WriteString("  <url>\n")
+		sb.WriteString("    <loc>" + url + "</loc>\n")
+		sb.WriteString("    <lastmod>" + now + "</lastmod>\n")
+		sb.WriteString("  </url>\n")
+	}
+
+	sb.WriteString(`</urlset>` + "\n")
+	_, err = f.WriteString(sb.String())
+	return err
+}
+
 func main() {
 
 	postsDir := "./posts/"
@@ -165,5 +208,11 @@ func main() {
 		log.Println(err)
 	}
 
-	GenerateIndexPage()
+	if err := GenerateIndexPage(); err != nil {
+		log.Println("Error generating index:", err)
+	}
+
+	if err := GenerateSitemap(); err != nil {
+		log.Println("Error generating sitemap:", err)
+	}
 }

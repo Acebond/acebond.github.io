@@ -12,3 +12,4 @@
 *.out
 
 site/*.html
+site/*.xml

@@ -88,13 +88,60 @@ func GenerateBlogPage(file *os.File, path string, info os.FileInfo) error {
 		blogURLS = append(blogURLS, baseURL+"/"+fileName)
 	}
 
-	tpl, err := template.ParseFiles("./templates/post.html")
+	tpl, err := template.ParseFiles("./post.html")
 	if err != nil {
 		return err
 	}
 
 	templateData := Post{
 		Title: title,
+		Post:  template.HTML(htmlOutput.String()),
+	}
+
+	err = tpl.Execute(htmlFile, templateData)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func GenerateToolsPage() error {
+
+	md := goldmark.New()
+
+	savePath := "./site/tools.html"
+	htmlFile, err := os.Create(savePath)
+	if err != nil {
+		return err
+	}
+	defer htmlFile.Close()
+
+	// https://github.com/Acebond/old.shellz.club/blob/master/tools.markdown
+	toolsLinks := []string{
+		"https://github.com/RedCursorSecurityConsulting/PPLKiller",
+		"https://github.com/RedCursorSecurityConsulting/NTFSCopy",
+		"https://github.com/RedCursorSecurityConsulting/CVE-2020-0668",
+		"https://github.com/Acebond/ReverseSocks5",
+		"https://github.com/Acebond/GhostWrite64",
+		"https://github.com/Acebond/CoughLoader",
+		"https://github.com/Acebond/CLRHost",
+	}
+
+	toolsMarkdown := strings.Join(toolsLinks, "\n")
+	var htmlOutput bytes.Buffer
+	err = md.Convert([]byte(toolsMarkdown), &htmlOutput)
+	if err != nil {
+		return err
+	}
+
+	tpl, err := template.ParseFiles("./post.html")
+	if err != nil {
+		return err
+	}
+
+	templateData := Post{
+		Title: "Tools",
 		Post:  template.HTML(htmlOutput.String()),
 	}
 
@@ -125,7 +172,7 @@ func GenerateIndexPage() error {
 		return err
 	}
 
-	tpl, err := template.ParseFiles("./templates/post.html")
+	tpl, err := template.ParseFiles("./post.html")
 	if err != nil {
 		return err
 	}
@@ -164,13 +211,6 @@ func GenerateSitemap() error {
 	sb.WriteString("  </url>\n")
 
 	for _, url := range blogURLS {
-		//start := strings.Index(entry, "](")
-		//end := strings.Index(entry, ")")
-		//if start == -1 || end == -1 || end <= start+2 {
-		//	continue
-		//}
-		//urlPath := entry[start+2 : end]
-
 		sb.WriteString("  <url>\n")
 		sb.WriteString("    <loc>" + url + "</loc>\n")
 		sb.WriteString("    <lastmod>" + now + "</lastmod>\n")

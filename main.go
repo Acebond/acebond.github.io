@@ -126,6 +126,7 @@ func GenerateToolsPage() error {
 		"https://github.com/Acebond/GhostWrite64",
 		"https://github.com/Acebond/CoughLoader",
 		"https://github.com/Acebond/CLRHost",
+		"https://github.com/Acebond/GoPastAV",
 	}
 
 	toolsMarkdown := strings.Join(toolsLinks, "\n")

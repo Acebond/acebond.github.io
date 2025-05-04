@@ -108,6 +108,30 @@ func GenerateBlogPage(file *os.File, path string, info os.FileInfo) error {
 
 func GenerateToolsPage() error {
 
+	toolsPageMarkdown :=
+		`
+### [ReverseSocks5](https://github.com/Acebond/ReverseSocks5)
+Single executable reverse SOCKS5 proxy written in Golang.
+
+### [PPLKiller](https://github.com/RedCursorSecurityConsulting/PPLKiller)
+PPLKiller leverages a trusted MSI driver to disable LSA Protection; allowing credentials to be dumped from memory. The tool supports removing the Protected Process Light (PPL) attributes from any process and manipulating process tokens.
+
+### [NTFSCopy](https://github.com/RedCursorSecurityConsulting/NTFSCopy)
+An execute-assembly compatible tool that can copy in-use files such as ntds.dit using NTFS structure parsing. The tool simply a wrapper for [NtfsLib](https://github.com/LordMike/NtfsLib).
+
+### [LSASecretsTool](https://github.com/Acebond/LSASecretsTool)
+An execute-assembly compatible tool for manipulating LSA secrets using the undocumented but official LSASS API calls. This includes reading, writing, creating and deleting LSA secrets.
+
+### [CVE-2020-0668](https://github.com/RedCursorSecurityConsulting/CVE-2020-0668)
+Implementation of CVE-2020-0668 which leverages symbolic links to perform a privileged file move operation that can lead to privilege escalation on all versions of Windows from Vista to 10, including server editions.
+
+### [SharpHashSpray](https://github.com/RedCursorSecurityConsulting/SharpHashSpray)
+An execute-assembly compatible tool for spraying local admin hashes (NTLM). By default the tool will automatically fetch a list of all domain joined hosts to check. Alternatively a target range can be provided.
+
+### [GetAdDecodedPassword](https://github.com/RedCursorSecurityConsulting/GetAdDecodedPassword)
+This tool queries Active Directory for users with the UnixUserPassword, UserPassword, unicodePwd, or msSFU30Password properties populated. It then decodes those password fields and displays them to the user.
+`
+
 	md := goldmark.New()
 
 	savePath := "./site/tools.html"
@@ -117,21 +141,8 @@ func GenerateToolsPage() error {
 	}
 	defer htmlFile.Close()
 
-	// https://github.com/Acebond/old.shellz.club/blob/master/tools.markdown
-	toolsLinks := []string{
-		"https://github.com/RedCursorSecurityConsulting/PPLKiller",
-		"https://github.com/RedCursorSecurityConsulting/NTFSCopy",
-		"https://github.com/RedCursorSecurityConsulting/CVE-2020-0668",
-		"https://github.com/Acebond/ReverseSocks5",
-		"https://github.com/Acebond/GhostWrite64",
-		"https://github.com/Acebond/CoughLoader",
-		"https://github.com/Acebond/CLRHost",
-		"https://github.com/Acebond/GoPastAV",
-	}
-
-	toolsMarkdown := strings.Join(toolsLinks, "\n")
 	var htmlOutput bytes.Buffer
-	err = md.Convert([]byte(toolsMarkdown), &htmlOutput)
+	err = md.Convert([]byte(toolsPageMarkdown), &htmlOutput)
 	if err != nil {
 		return err
 	}
@@ -146,12 +157,7 @@ func GenerateToolsPage() error {
 		Post:  template.HTML(htmlOutput.String()),
 	}
 
-	err = tpl.Execute(htmlFile, templateData)
-	if err != nil {
-		return err
-	}
-
-	return nil
+	return tpl.Execute(htmlFile, templateData)
 }
 
 func GenerateIndexPage() error {
@@ -255,5 +261,9 @@ func main() {
 
 	if err := GenerateSitemap(); err != nil {
 		log.Println("Error generating sitemap:", err)
+	}
+
+	if err := GenerateToolsPage(); err != nil {
+		log.Println("Error generating tools page:", err)
 	}
 }

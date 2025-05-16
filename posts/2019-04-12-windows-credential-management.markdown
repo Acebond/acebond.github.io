@@ -28,9 +28,6 @@ make_token [DOMAIN\user] [password] pth [DOMAIN\user] [HASH] spawnas [DOMAIN\use
 ```
 Lastly you can directly pass the credentials to the tool performing the network operations like so:
 
-```
-
-
 ```powershell
 $pass = ConvertTo-SecureString 'Winter2019' -AsPlainText -Force;
 $cred = New-Object System.Management.Automation.PSCredential('DOMAIN\Account', $pass);

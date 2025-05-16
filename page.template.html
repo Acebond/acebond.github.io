@@ -8,7 +8,7 @@
   <meta property="og:url" content="https://acebond.github.io/">
   <meta property="og:title" content="{{.Title}}">
   <link href="/assets/css/output.css" rel="stylesheet">
-
+  <title>{{.Title}}</title>
   <script>
     function updateIcon() {
       const button = document.getElementById('dark-mode-toggle');
@@ -41,7 +41,7 @@
     });
 
   </script>
-  <title>{{.Title}}</title>
+  
 </head>
 <body class="dark:bg-gray-900">
   <div class="container mx-auto px-2">
@@ -58,8 +58,8 @@
       <h1>{{.Title}}</h1>
       {{.Post}}
     </article>
-    <footer class="max-w-(--breakpoint-lg) my-10 mx-auto">
-      <p>© <time>2025</time> <a href="https://infosec.exchange/@acebond">Acebond</a></p>
+    <footer class="max-w-(--breakpoint-lg) my-10 mx-auto dark:text-white text-sm">
+      <p>© <time>2025</time> <strong><a href="https://infosec.exchange/@acebond">Acebond</a></strong></p>
     </footer>
   </div>
 </body>

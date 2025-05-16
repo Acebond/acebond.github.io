@@ -7,14 +7,7 @@
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://acebond.github.io/">
   <meta property="og:title" content="{{.Title}}">
-
-  
-
-
-  <link href="/out.css" rel="stylesheet">
-  <!--<script src="/assets/js/tailwind_3.4.16_typography_0.5.15.js"></script>-->
-  <!-- From: https://cdn.tailwindcss.com?plugins=typography -->
-  <!--<script>tailwind.config = {darkMode: 'selector'}</script>-->
+  <link href="/output.css" rel="stylesheet">
 
   <script>
     function updateIcon() {
@@ -52,7 +45,7 @@
 </head>
 <body class="dark:bg-gray-900">
   <div class="container mx-auto px-2">
-    <nav class="max-w-screen-lg my-10 mx-auto dark:text-white flex justify-between items-center">
+    <nav class="max-w-(--breakpoint-lg) my-10 mx-auto dark:text-white flex justify-between items-center">
       <strong>
         <a href="/index.html">HOME</a>
         <span class="mx-2">&#8226;</span>
@@ -61,7 +54,7 @@
       <button id="dark-mode-toggle" aria-label="Toggle Dark Mode" class="flex items-center space-x-2" onclick="toggleDarkMode()">
       </button>
     </nav>
-    <article class="prose lg:prose-xl dark:prose-invert max-w-screen-lg my-10 mx-auto">
+    <article class="prose lg:prose-xl dark:prose-invert max-w-(--breakpoint-lg) my-10 mx-auto">
       <h1>{{.Title}}</h1>
       {{.Post}}
     </article>

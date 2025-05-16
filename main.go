@@ -88,7 +88,7 @@ func GenerateBlogPage(file *os.File, path string, info os.FileInfo) error {
 		blogURLS = append(blogURLS, baseURL+"/"+fileName)
 	}
 
-	tpl, err := template.ParseFiles("./post.html")
+	tpl, err := template.ParseFiles("./page.template.html")
 	if err != nil {
 		return err
 	}
@@ -147,7 +147,7 @@ This tool queries Active Directory for users with the UnixUserPassword, UserPass
 		return err
 	}
 
-	tpl, err := template.ParseFiles("./post.html")
+	tpl, err := template.ParseFiles("./page.template.html")
 	if err != nil {
 		return err
 	}
@@ -179,7 +179,7 @@ func GenerateIndexPage() error {
 		return err
 	}
 
-	tpl, err := template.ParseFiles("./post.html")
+	tpl, err := template.ParseFiles("./page.template.html")
 	if err != nil {
 		return err
 	}

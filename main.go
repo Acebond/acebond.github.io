@@ -187,7 +187,7 @@ CoughLoader is a COFF loader, allowing malware to load and execute their COFFs i
 Host the .NET CLR in native code.
 
 ### [GoPastAV](https://github.com/Acebond/GoPastAV)
-Generate MSBuild project files that execute shellcode with AV bypass techniques. 
+Generate tailored MSBuild compatible project files for executing shellcode on endpoints with application whitelisting solutions. The tool employs a number of antivirus and EDR evasion techniques, including encryption of the shellcode, sandbox detection, environment keying and multiple shellcode injection methods.
 
 ### [NTFSCopy](https://github.com/RedCursorSecurityConsulting/NTFSCopy)
 An execute-assembly compatible tool that can copy in-use files such as ntds.dit using NTFS structure parsing. The tool simply a wrapper for [NtfsLib](https://github.com/LordMike/NtfsLib).
@@ -204,6 +204,8 @@ An execute-assembly compatible tool for spraying local admin hashes (NTLM). By d
 ### [GetAdDecodedPassword](https://github.com/RedCursorSecurityConsulting/GetAdDecodedPassword)
 This tool queries Active Directory for users with the UnixUserPassword, UserPassword, unicodePwd, or msSFU30Password properties populated. It then decodes those password fields and displays them to the user.
 `
+
+	whoamiPageMarkdown := `Acebond`
 
 	postsDir := "./posts/"
 
@@ -244,7 +246,8 @@ This tool queries Active Directory for users with the UnixUserPassword, UserPass
 		log.Println("Error generating tools page:", err)
 	}
 
-	//if err := GenerateToolsPage(); err != nil {
-	//	log.Println("Error generating tools page:", err)
-	//}
+	if err := GeneratePage(whoamiPageMarkdown, "whoami.html", "whoami"); err != nil {
+		log.Println("Error generating whoami page:", err)
+	}
+
 }

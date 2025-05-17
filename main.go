@@ -7,6 +7,7 @@ import (
 	"io"
 	"log"
 	"os"
+	"path"
 	"path/filepath"
 	"strings"
 	"time"
@@ -22,6 +23,7 @@ var (
 	blogTitles = []string{}
 	blogURLS   = []string{}
 	baseURL    = "https://acebond.github.io"
+	basePath   = "./site/"
 )
 
 type Post struct {
@@ -106,35 +108,10 @@ func GenerateBlogPage(file *os.File, path string, info os.FileInfo) error {
 	return nil
 }
 
-func GenerateToolsPage() error {
-
-	toolsPageMarkdown :=
-		`
-### [ReverseSocks5](https://github.com/Acebond/ReverseSocks5)
-Single executable reverse SOCKS5 proxy written in Golang.
-
-### [PPLKiller](https://github.com/RedCursorSecurityConsulting/PPLKiller)
-PPLKiller leverages a trusted MSI driver to disable LSA Protection; allowing credentials to be dumped from memory. The tool supports removing the Protected Process Light (PPL) attributes from any process and manipulating process tokens.
-
-### [NTFSCopy](https://github.com/RedCursorSecurityConsulting/NTFSCopy)
-An execute-assembly compatible tool that can copy in-use files such as ntds.dit using NTFS structure parsing. The tool simply a wrapper for [NtfsLib](https://github.com/LordMike/NtfsLib).
-
-### [LSASecretsTool](https://github.com/Acebond/LSASecretsTool)
-An execute-assembly compatible tool for manipulating LSA secrets using the undocumented but official LSASS API calls. This includes reading, writing, creating and deleting LSA secrets.
-
-### [CVE-2020-0668](https://github.com/RedCursorSecurityConsulting/CVE-2020-0668)
-Implementation of CVE-2020-0668 which leverages symbolic links to perform a privileged file move operation that can lead to privilege escalation on all versions of Windows from Vista to 10, including server editions.
-
-### [SharpHashSpray](https://github.com/RedCursorSecurityConsulting/SharpHashSpray)
-An execute-assembly compatible tool for spraying local admin hashes (NTLM). By default the tool will automatically fetch a list of all domain joined hosts to check. Alternatively a target range can be provided.
-
-### [GetAdDecodedPassword](https://github.com/RedCursorSecurityConsulting/GetAdDecodedPassword)
-This tool queries Active Directory for users with the UnixUserPassword, UserPassword, unicodePwd, or msSFU30Password properties populated. It then decodes those password fields and displays them to the user.
-`
-
+func GeneratePage(content string, saveName string, title string) error {
 	md := goldmark.New()
 
-	savePath := "./site/tools.html"
+	savePath := path.Join(basePath, saveName)
 	htmlFile, err := os.Create(savePath)
 	if err != nil {
 		return err
@@ -142,7 +119,7 @@ This tool queries Active Directory for users with the UnixUserPassword, UserPass
 	defer htmlFile.Close()
 
 	var htmlOutput bytes.Buffer
-	err = md.Convert([]byte(toolsPageMarkdown), &htmlOutput)
+	err = md.Convert([]byte(content), &htmlOutput)
 	if err != nil {
 		return err
 	}
@@ -153,48 +130,11 @@ This tool queries Active Directory for users with the UnixUserPassword, UserPass
 	}
 
 	templateData := Post{
-		Title: "Tools",
+		Title: title,
 		Post:  template.HTML(htmlOutput.String()),
 	}
 
 	return tpl.Execute(htmlFile, templateData)
-}
-
-func GenerateIndexPage() error {
-
-	md := goldmark.New()
-
-	savePath := "./site/index.html"
-	htmlFile, err := os.Create(savePath)
-	if err != nil {
-		return err
-	}
-	defer htmlFile.Close()
-
-	reverse(blogTitles)
-	indexMarkdown := strings.Join(blogTitles, "\n")
-	var htmlOutput bytes.Buffer
-	err = md.Convert([]byte(indexMarkdown), &htmlOutput)
-	if err != nil {
-		return err
-	}
-
-	tpl, err := template.ParseFiles("./page.template.html")
-	if err != nil {
-		return err
-	}
-
-	templateData := Post{
-		Title: "Posts",
-		Post:  template.HTML(htmlOutput.String()),
-	}
-
-	err = tpl.Execute(htmlFile, templateData)
-	if err != nil {
-		return err
-	}
-
-	return nil
 }
 
 func GenerateSitemap() error {
@@ -230,6 +170,40 @@ func GenerateSitemap() error {
 }
 
 func main() {
+	toolsPageMarkdown := `
+### [ReverseSocks5](https://github.com/Acebond/ReverseSocks5)
+Single executable reverse SOCKS5 proxy written in Golang.
+
+### [PPLKiller](https://github.com/RedCursorSecurityConsulting/PPLKiller)
+PPLKiller leverages a trusted MSI driver to disable LSA Protection; allowing credentials to be dumped from memory. The tool supports removing the Protected Process Light (PPL) attributes from any process and manipulating process tokens.
+
+### [GhostWrite64](https://github.com/Acebond/GhostWrite64)
+Process injection technique that uses only Get/SetThreadContext.
+
+### [CoughLoader](https://github.com/Acebond/CoughLoader)
+CoughLoader is a COFF loader, allowing malware to load and execute their COFFs in memory for educational purposes.
+
+### [CLRHost](https://github.com/Acebond/CLRHost)
+Host the .NET CLR in native code.
+
+### [GoPastAV](https://github.com/Acebond/GoPastAV)
+Generate MSBuild project files that execute shellcode with AV bypass techniques. 
+
+### [NTFSCopy](https://github.com/RedCursorSecurityConsulting/NTFSCopy)
+An execute-assembly compatible tool that can copy in-use files such as ntds.dit using NTFS structure parsing. The tool simply a wrapper for [NtfsLib](https://github.com/LordMike/NtfsLib).
+
+### [LSASecretsTool](https://github.com/Acebond/LSASecretsTool)
+An execute-assembly compatible tool for manipulating LSA secrets using the undocumented but official LSASS API calls. This includes reading, writing, creating and deleting LSA secrets.
+
+### [CVE-2020-0668](https://github.com/RedCursorSecurityConsulting/CVE-2020-0668)
+Implementation of CVE-2020-0668 which leverages symbolic links to perform a privileged file move operation that can lead to privilege escalation on all versions of Windows from Vista to 10, including server editions.
+
+### [SharpHashSpray](https://github.com/RedCursorSecurityConsulting/SharpHashSpray)
+An execute-assembly compatible tool for spraying local admin hashes (NTLM). By default the tool will automatically fetch a list of all domain joined hosts to check. Alternatively a target range can be provided.
+
+### [GetAdDecodedPassword](https://github.com/RedCursorSecurityConsulting/GetAdDecodedPassword)
+This tool queries Active Directory for users with the UnixUserPassword, UserPassword, unicodePwd, or msSFU30Password properties populated. It then decodes those password fields and displays them to the user.
+`
 
 	postsDir := "./posts/"
 
@@ -255,7 +229,10 @@ func main() {
 		log.Println(err)
 	}
 
-	if err := GenerateIndexPage(); err != nil {
+	reverse(blogTitles)
+	indexMarkdown := strings.Join(blogTitles, "\n")
+
+	if err := GeneratePage(indexMarkdown, "index.html", "Posts"); err != nil {
 		log.Println("Error generating index:", err)
 	}
 
@@ -263,7 +240,11 @@ func main() {
 		log.Println("Error generating sitemap:", err)
 	}
 
-	if err := GenerateToolsPage(); err != nil {
+	if err := GeneratePage(toolsPageMarkdown, "tools.html", "Tools"); err != nil {
 		log.Println("Error generating tools page:", err)
 	}
+
+	//if err := GenerateToolsPage(); err != nil {
+	//	log.Println("Error generating tools page:", err)
+	//}
 }

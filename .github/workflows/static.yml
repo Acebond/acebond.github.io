@@ -30,7 +30,7 @@ jobs:
       - uses: actions/setup-go@v5
       - run: go build -o site-generator .
       - run: mkdir site
-      - run: cp -r assets site
+      - run: mv -r assets site
       - run: ./site-generator
 
       - uses: actions/setup-node@v4
@@ -41,7 +41,7 @@ jobs:
 
       - name: Build Tailwind CSS
         run: |
-          npx @tailwindcss/cli -i ./input.css -o ./site/assets/css/output2.css --minify
+          npx @tailwindcss/cli -i ./input.css -o ./site/assets/css/output.css --minify
 
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3

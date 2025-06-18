@@ -30,7 +30,7 @@ jobs:
       - uses: actions/setup-go@v5
       - run: go build -o site-generator .
       - run: mkdir site
-      - run: mv -r assets site
+      - run: mv assets site
       - run: ./site-generator
 
       - uses: actions/setup-node@v4

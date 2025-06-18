@@ -2,7 +2,7 @@
 title: 'NTLM Relaying Tips and Tricks'
 ---
 ## NTLM Relay Cheat Sheet
-![NTLM Relay](/assets/img/2025-06-18/NTLM Relay.svg)
+![NTLM Relay]('/assets/img/2025-06-18/NTLM Relay.svg')
 
 **Note:** The cheat sheet assumes modern Windows with NTLMv2 being used. NTLMv1 acts the same as HTTP and can be relayed to anything indicated by the “1”. When relaying NTLMv1 using `ntlmrelayx` you must use the `--remove-mic` flag in most cases (such as SMB->LDAP).
 
@@ -11,7 +11,7 @@ title: 'NTLM Relaying Tips and Tricks'
 ### via RPC Methods (PetitPotam, ShadowCoerce, DFSCoerce, SpoolSample, etc.)
 [Coercer](https://github.com/p0dalirius/Coercer) is your best bet. It covers many of the PoCs discovered into a single well tested tool. It also works well using a SOCKS5 proxy. Remember to use the `--auth-type {smb,http}` flag because in many cases you want HTTP.
 
-The Windows WebClient service can be used to determine if coerced auth via WebDAV (HTTP) will work. Any Domain User can determine if that service is running to find good potental relay victums.
+The Windows WebClient service can be used to determine if coerced auth via WebDAV (HTTP) will work. Any Domain User can determine if that service is running to find good potential relay victims.
 - Linux: <https://github.com/Hackndo/WebclientServiceScanner>
 - Linux: <https://github.com/Pennyw0rth/NetExec>
 - Windows: <https://github.com/MorDavid/SharpWebClientScanner>

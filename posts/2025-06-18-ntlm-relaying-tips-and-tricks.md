@@ -2,7 +2,7 @@
 title: 'NTLM Relaying Tips and Tricks'
 ---
 ## NTLM Relay Cheat Sheet
-![NTLM Relay]('/assets/img/2025-06-18/NTLM Relay.svg')
+![NTLM Relay](/assets/img/2025-06-18/NTLM_Relay.svg)
 
 **Note:** The cheat sheet assumes modern Windows with NTLMv2 being used. NTLMv1 acts the same as HTTP and can be relayed to anything indicated by the “1”. When relaying NTLMv1 using `ntlmrelayx` you must use the `--remove-mic` flag in most cases (such as SMB->LDAP).
 

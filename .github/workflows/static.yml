@@ -37,7 +37,7 @@ jobs:
         with:
           node-version: '22'
       - name: Install Tailwind CSS v4 CLI
-        run: npm install tailwindcss @tailwindcss/cli --no-save
+        run: npm install tailwindcss @tailwindcss/typography @tailwindcss/cli --no-save
 
       - name: Build Tailwind CSS
         run: |

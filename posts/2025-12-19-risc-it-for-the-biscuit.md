@@ -130,10 +130,10 @@ SECTIONS {
 To build the example, use Developer Command Prompt for VS or Developer PowerShell for VS. 
 In the Visual Studio Installer, you will need C++ Clang tools for Windows.
 ```bash
-clang -target riscv64 -march=rv64im -mcmodel=medany -nostdlib -Wl,-T,link.ld stub.s prime.c -o prime.elf
-llvm-objcopy -O binary prime.elf prime.bin
+clang -target riscv64 -march=rv64im -mcmodel=medany -nostdlib -Wl,-T,link.ld stub.s prime.c -o prime.o
+llvm-objcopy -O binary prime.o prime.bin
 # Look at the disassembly
-llvm-objdump --disassemble prime.elf
+llvm-objdump --disassemble prime.o
 ```
 
 You should see:

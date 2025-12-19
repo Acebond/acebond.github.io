@@ -143,8 +143,8 @@ The 10000th prime number is: 104729
 
 When running the VM, it the exit code indicates the following:
 ```text
-INIT_FAILED(1)          : Setup failed, it proabbly failed to read the file
-ILLEGAL_INSTRUCTION(2)  : You dont something wrong
+INIT_FAILED(1)          : Setup failed, it probably failed to read the file
+ILLEGAL_INSTRUCTION(2)  : You did something wrong
 RESERVED(3)             : Unused
 INVALID_SYSCALL(4)      : You called something other than the 5 syscalls in the example
 EXIT(5)                 : It exited successful using the exit syscall.

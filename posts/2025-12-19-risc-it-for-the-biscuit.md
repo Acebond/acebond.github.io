@@ -1,4 +1,6 @@
-## CTF Challenge: RISC It for the Biscuit
+---
+title: 'CTF Challenge: RISC It for the Biscuit'
+---
 
 I have developed a 64bit RISC-V virtual machine you can download [here](/assets/files/RISC%20It%20for%20the%20Biscuit.7z). I decided to keep it simple, and didn't add an MMU, so it uses the host process memory addresses. I doubt thats going to cause any issues. There is a `flag.txt` the in same directory as the VM. You can give the binary to acebond on Discord, and I'll run it on the latest version of Windows 11 25H2 and give you the output, and add you to the list of solvers if it prints the flag.
 

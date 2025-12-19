@@ -2,17 +2,17 @@
 title: 'CTF Challenge: RISC It for the Biscuit'
 ---
 
-I have developed a 64bit RISC-V virtual machine you can download [here](/assets/files/RISC%20It%20for%20the%20Biscuit.7z). I decided to keep it simple, and didn't add an MMU, so it uses the host process memory addresses. I doubt thats going to cause any issues. There is a `flag.txt` the in same directory as the VM. You can give the binary to acebond on Discord, and I'll run it on the latest version of Windows 11 25H2 and give you the output, and add you to the list of solvers if it prints the flag.
+I have developed a RISC-V 64bit (RV64IM) virtual machine you can download [here](/assets/files/RISC%20It%20for%20the%20Biscuit.7z). I decided to keep it simple, and didn't add an MMU, so it uses the host process memory addresses. I doubt thats going to cause any issues. There is a `flag.txt` the in same directory as the VM that you need to read by providing the VM with a binary to execute.
 
 You can compile C code for the virtual machine like so:
 ```c
 #include <stdint.h>
 
 extern void syscall_exit(void);
-extern int print_char_string(char* str);
-extern int print_u64_hex(uint64_t val);
-extern int print_u64(uint64_t val);
-extern int print_new_line(void);
+extern void print_char_string(char* str);
+extern void print_u64_hex(uint64_t val);
+extern void print_u64(uint64_t val);
+extern void print_new_line(void);
 
 // Return the n-th prime (n >= 1). For n == 1, returns 2.
 uint64_t find_nth_prime(uint64_t n) {
@@ -61,7 +61,7 @@ uint64_t find_nth_prime(uint64_t n) {
 
 void run(void) {
     uint64_t nth_prime_number_to_find = 10000;
-    uint64_t nth_prime = find_nth_prime(10000);
+    uint64_t nth_prime = find_nth_prime(nth_prime_number_to_find);
     print_char_string("The "); 
     print_u64(nth_prime_number_to_find);
     print_char_string("th prime number is: ");
@@ -71,7 +71,7 @@ void run(void) {
 }
 ```
 
-This uses a couple syscall the VM exposes, those are defined like so:
+This uses a couple syscall's the VM exposes, those are defined like so:
 ```asm
 .section .text
 .globl _start, syscall_exit, print_char_string, print_u64_hex, print_u64, print_new_line
@@ -129,10 +129,11 @@ SECTIONS {
 
 To build the example, use Developer Command Prompt for VS or Developer PowerShell for VS. 
 In the Visual Studio Installer, you will need C++ Clang tools for Windows.
-![Clang is needed](/assets/img/2025-12-19/visual_studio_config.png)
-```
-clang -target riscv64 -march=rv64im -mcmodel=medany -nostdlib -Wl,-T,link.ld stub.s prime.c -o prime.o
-llvm-objcopy -O binary prime.o prime.bin
+```bash
+clang -target riscv64 -march=rv64im -mcmodel=medany -nostdlib -Wl,-T,link.ld stub.s prime.c -o prime.elf
+llvm-objcopy -O binary prime.elf prime.bin
+# Look at the disassembly
+llvm-objdump --disassemble prime.elf
 ```
 
 You should see:
@@ -141,14 +142,15 @@ PS Release> .\RV64VMv4.exe .\prime.bin
 The 10000th prime number is: 104729
 ```
 
-When running the VM, it the exit code indicates the following:
+When running the VM, the exit code indicates the following:
 ```text
-INIT_FAILED(1)          : Setup failed, it probably failed to read the file
-ILLEGAL_INSTRUCTION(2)  : You did something wrong
-RESERVED(3)             : Unused
-INVALID_SYSCALL(4)      : You called something other than the 5 syscalls in the example
-EXIT(5)                 : It exited successful using the exit syscall.
+SUCCESS(0): It exited successful using the exit syscall.
+INVALID_INSTRUCTION(1): You give the VM bad machine code.
+INVALID_SYSCALL(2): You called something other than the 5 syscalls in the example.
 ```
+
+## Submitting a Solution 
+You can give the binary to acebond on Discord, and I'll run it on the latest version of Windows 11 25H2 and give you the output, and add you to the list of solvers if it prints the flag.
 
 ## Smart People Who Have Solved It
 :(

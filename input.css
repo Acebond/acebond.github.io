@@ -15,7 +15,7 @@
   article {
     background-color: #000000;
   }
-  .chroma {
-    background-color: #000000 !important;
+  pre {
+    background-color: #000000;
   }
 }

@@ -12,6 +12,8 @@ import (
 	"strings"
 	"time"
 
+	"github.com/alecthomas/chroma/v2"
+	"github.com/alecthomas/chroma/v2/styles"
 	"github.com/yuin/goldmark"
 	highlighting "github.com/yuin/goldmark-highlighting/v2"
 	meta "github.com/yuin/goldmark-meta"
@@ -59,12 +61,20 @@ func GenerateBlogPage(file *os.File, path string, info os.FileInfo) error {
 		return err
 	}
 
+	// Build a custom style based on "monokai", overriding the background
+	builder := styles.Get("dracula").Builder()
+	builder.Add(chroma.Background, "bg:#090909") // bg:color foreground
+	customStyle, err := builder.Build()
+	if err != nil {
+		return err
+	}
+
 	md := goldmark.New(
 		goldmark.WithExtensions(
 			extension.GFM,
 			meta.Meta,
 			highlighting.NewHighlighting(
-				highlighting.WithStyle("dracula"),
+				highlighting.WithCustomStyle(customStyle),
 			),
 		),
 		goldmark.WithRendererOptions(

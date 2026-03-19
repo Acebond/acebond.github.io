@@ -17,6 +17,7 @@ import (
 	meta "github.com/yuin/goldmark-meta"
 	"github.com/yuin/goldmark/extension"
 	"github.com/yuin/goldmark/parser"
+	"github.com/yuin/goldmark/renderer/html"
 )
 
 var (
@@ -65,6 +66,9 @@ func GenerateBlogPage(file *os.File, path string, info os.FileInfo) error {
 			highlighting.NewHighlighting(
 				highlighting.WithStyle("dracula"),
 			),
+		),
+		goldmark.WithRendererOptions(
+			html.WithUnsafe(),
 		),
 	)
 

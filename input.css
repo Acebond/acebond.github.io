@@ -10,14 +10,4 @@
   html {
     overflow-y: scroll;
   }
-  body {
-    background-color: #330033;
-    background-image: url("/assets/svg/endless-constellation.svg");
-  }
-  body > div {
-    background-color: rgb(0 0 0 / 0.5);
-    max-width: var(--breakpoint-lg);
-    margin-inline: auto;
-    min-height: 100vh;
-  }
 }

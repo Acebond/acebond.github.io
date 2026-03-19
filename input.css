@@ -4,8 +4,6 @@
 
 @source './*.html';
 
-@custom-variant dark (&:where(.dark, .dark *));
-
 @layer base {
   html {
     overflow-y: scroll;
@@ -13,5 +11,8 @@
   body {
     background-color: #000000;
     background-image: url("/assets/svg/endless-constellation.svg");
+  }
+  article {
+    background-color: #000000;
   }
 }

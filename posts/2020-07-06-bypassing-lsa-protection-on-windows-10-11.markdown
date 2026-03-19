@@ -30,6 +30,6 @@ _Figure 2 - EPROCESS structure offsets on Windows 1909_
 
 Now that the PPL has been removed, all the traditional methods of dumping LSASS will work, such as MimiKatz, the MiniDumpWriteDump API call, etc.
 
-{% include embed/youtube.html id='w2_KqnhgN94' %}
+<iframe width="560" height="315" src="https://www.youtube.com/embed/w2_KqnhgN94?si=eUd2nS5OycxfCM0u" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
 
 The tool which is written in C/C++ to perform this attack can be found on [GitHub](https://github.com/RedCursorSecurityConsulting/PPLKiller). I’ve only tested on Windows 1903, 1909 and 2004. It should work on all versions of Windows since the feature was introduced but I’ve only got the offsets for those versions implemented.

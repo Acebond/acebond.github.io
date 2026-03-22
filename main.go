@@ -188,6 +188,9 @@ func main() {
 ### [ReverseSocks5](https://github.com/Acebond/ReverseSocks5)
 Single executable reverse SOCKS5 proxy written in Golang.
 
+### [HashLeakFileGen](https://github.com/Acebond/HashLeakFileGen)
+Tool to generate files that leak NTLM hashes when viewed in Windows explorer. 
+
 ### [PPLKiller](https://github.com/RedCursorSecurityConsulting/PPLKiller)
 PPLKiller leverages a trusted MSI driver to disable LSA Protection; allowing credentials to be dumped from memory. The tool supports removing the Protected Process Light (PPL) attributes from any process and manipulating process tokens.
 

